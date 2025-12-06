@@ -28,11 +28,15 @@ export async function GET(request: NextRequest) {
         language: true,
         createdAt: true,
         share: { select: { slug: true } },
+        cookidooId: true,
+        cookidooUrl: true,
+        syncedAt: true,
       },
     });
     const mapped = recipes.map((r: typeof recipes[number]) => ({
       ...r,
       slug: r.share?.slug ?? null,
+      synced: !!r.cookidooId,
     }));
     return NextResponse.json({ recipes: mapped });
   } catch (error) {

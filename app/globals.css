@@ -1241,6 +1241,16 @@ footer a:hover {
   letter-spacing: 0.02em;
 }
 
+.pill-synced {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.pill-muted {
+  background: var(--gray-100);
+  color: var(--text-muted);
+}
+
 .small-text {
   font-size: 0.85rem;
   color: var(--text-secondary);

@@ -79,6 +79,11 @@ model Recipe {
   userId       String?
   user         User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   share        Share?
+  
+  // Cookidoo sync status
+  cookidooId   String?
+  cookidooUrl  String?
+  syncedAt     DateTime?
 
   @@index([originalUrl])
   @@index([userId])

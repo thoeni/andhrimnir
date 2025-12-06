@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { recipeData, locale = "en-GB" } = body;
+    const { recipeData, locale = "en-GB", savedRecipeId } = body;
 
     if (!recipeData) {
       return NextResponse.json({ error: "Recipe data is required" }, { status: 400 });
@@ -65,6 +65,24 @@ export async function POST(request: NextRequest) {
         error: result.error,
         recipeId: result.recipeId, // Return ID if created but patch failed
       }, { status: 400 });
+    }
+
+    // Update the saved recipe with Cookidoo sync info
+    if (savedRecipeId && result.recipeId) {
+      try {
+        await prisma.recipe.update({
+          where: { id: savedRecipeId },
+          data: {
+            cookidooId: result.recipeId,
+            cookidooUrl: result.recipeUrl,
+            syncedAt: new Date(),
+          },
+        });
+        console.log(`[Cookidoo Sync API] Updated recipe ${savedRecipeId} with Cookidoo info`);
+      } catch (err) {
+        console.error(`[Cookidoo Sync API] Failed to update recipe sync status:`, err);
+        // Don't fail the whole request if this update fails
+      }
     }
 
     return NextResponse.json({

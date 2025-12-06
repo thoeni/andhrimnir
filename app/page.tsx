@@ -91,6 +91,8 @@ interface StoredRecipeSummary {
   createdAt: string;
   slug: string | null;
   language?: string;
+  synced?: boolean;
+  cookidooUrl?: string;
 }
 
 // Get flag for a language code
@@ -679,6 +681,7 @@ const handleConvert = async () => {
         body: JSON.stringify({
           recipeData: recipe,
           locale,
+          savedRecipeId, // Pass the saved recipe ID to update sync status
         }),
       });
 
@@ -1257,7 +1260,9 @@ const handleConvert = async () => {
                                 <span className="lang-flag" title={LANG_OPTIONS.find(l => l.code === r.language)?.label || "Unknown"}>
                                   {getLanguageFlag(r.language)}
                                 </span>
-                                <div className="pill">{r.slug ? "Shared" : "Saved"}</div>
+                                {r.synced && <div className="pill pill-synced">✓ Synced</div>}
+                                {r.slug && !r.synced && <div className="pill">Shared</div>}
+                                {!r.slug && !r.synced && <div className="pill pill-muted">Saved</div>}
                               </div>
                               <h3 className="list-card-title">{r.title}</h3>
                               <p className="small-text">{new Date(r.createdAt).toLocaleString()}</p>
