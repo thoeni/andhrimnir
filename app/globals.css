@@ -88,6 +88,13 @@ body {
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Prevent horizontal overflow globally */
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 .layout {
@@ -283,6 +290,9 @@ body {
   margin: 0 auto;
   padding: var(--space-xl) var(--space-lg);
   min-height: calc(100vh - 60px);
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Hero Section */
@@ -1325,20 +1335,80 @@ footer a:hover {
 }
 
 /* Responsive */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .layout {
     grid-template-columns: 1fr;
   }
 
   .sidebar {
-    position: relative;
-    height: auto;
-    border-right: none;
-    border-bottom: 1px solid var(--border-color);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    border-right: 1px solid var(--border-color);
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-toggle {
+    display: flex;
+  }
+
+  .mobile-menu-btn {
+    position: fixed;
+    top: var(--space-md);
+    left: var(--space-md);
+    z-index: 999;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .mobile-menu-btn svg {
+    width: 24px;
+    height: 24px;
+    stroke: var(--text-primary);
+  }
+
+  .mobile-menu-btn.hidden {
+    display: none;
+  }
+
+  .mobile-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .mobile-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .container {
     padding: var(--space-lg) var(--space-md);
+    padding-top: 70px; /* Space for mobile menu button */
   }
   
   .hero {
@@ -1346,7 +1416,7 @@ footer a:hover {
   }
   
   .logo h1 {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
   
   .tagline {
@@ -1376,6 +1446,142 @@ footer a:hover {
   
   .result-header h2 {
     font-size: 1.5rem;
+  }
+
+  .landing-logo-img {
+    height: 100px;
+  }
+
+  .landing-title {
+    font-size: 2rem;
+  }
+
+  .landing-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .landing-btn {
+    width: 100%;
+  }
+
+  /* Recipe result section mobile */
+  .preview-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .meta-card,
+  .ingredients-card,
+  .steps-card {
+    padding: var(--space-md);
+  }
+
+  .step-item {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
+
+  .step-number {
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
+  }
+
+  .step-instruction {
+    font-size: 0.875rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .step-thermomix {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .result-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .result-actions button {
+    width: 100%;
+  }
+
+  /* JSON output mobile */
+  .json-output pre {
+    font-size: 0.75rem;
+    overflow-x: auto;
+    max-width: 100%;
+  }
+
+  /* Save bar mobile */
+  .save-bar {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-sm);
+  }
+
+  /* List section mobile */
+  .list-section {
+    padding: 0;
+  }
+
+  .recipe-list-item {
+    padding: var(--space-md);
+  }
+
+  .recipe-list-item h3 {
+    font-size: 1rem;
+  }
+
+  .recipe-list-actions {
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .recipe-list-actions button {
+    width: 100%;
+    padding: var(--space-sm);
+    font-size: 0.75rem;
+  }
+
+  /* Auth section mobile */
+  .auth-section {
+    padding: var(--space-md);
+  }
+
+  .auth-gate-content {
+    padding: var(--space-lg);
+  }
+
+  .auth-gate-content h2 {
+    font-size: 1.25rem;
+  }
+
+  /* Modal mobile */
+  .modal-content {
+    width: 95%;
+    max-width: none;
+    margin: var(--space-md);
+    padding: var(--space-md);
+  }
+
+  /* Input card mobile */
+  .input-card {
+    padding: var(--space-md);
+  }
+
+  /* Annotation icons on mobile - make more visible */
+  .annotation-icon {
+    font-size: 0.625rem;
+  }
+}
+
+/* Hide mobile button on desktop */
+@media (min-width: 769px) {
+  .mobile-menu-btn,
+  .mobile-overlay {
+    display: none !important;
   }
 }
 

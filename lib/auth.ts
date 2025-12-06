@@ -30,7 +30,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn: "/", // Redirect to home page for sign in
+    signIn: "/",
   },
 };
 

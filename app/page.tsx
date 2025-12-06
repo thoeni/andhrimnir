@@ -187,6 +187,7 @@ export default function Home() {
   const [viewState, setViewState] = useState<ViewState>("input");
   const [navTab, setNavTab] = useState<NavTab | null>(null); // null = landing page
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [recipes, setRecipes] = useState<StoredRecipeSummary[]>([]);
   const [listLoading, setListLoading] = useState(false);
   const [listError, setListError] = useState("");
@@ -468,10 +469,29 @@ const handleConvert = async () => {
       <div className="background-pattern" />
 
       <div className={`layout ${sidebarOpen ? "" : "sidebar-collapsed"}`}>
-        <aside className={`sidebar ${sidebarOpen ? "" : "collapsed"}`}>
+        {/* Mobile menu button */}
+        <button 
+          className={`mobile-menu-btn ${mobileMenuOpen ? "hidden" : ""}`}
+          onClick={() => setMobileMenuOpen(true)}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M3 12h18M3 6h18M3 18h18" />
+          </svg>
+        </button>
+
+        {/* Mobile overlay */}
+        <div 
+          className={`mobile-overlay ${mobileMenuOpen ? "visible" : ""}`}
+          onClick={() => setMobileMenuOpen(false)}
+        />
+
+        <aside className={`sidebar ${sidebarOpen ? "" : "collapsed"} ${mobileMenuOpen ? "mobile-open" : ""}`}>
           <button 
             className="sidebar-toggle"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
+            onClick={() => {
+              setSidebarOpen(!sidebarOpen);
+              setMobileMenuOpen(false);
+            }}
             aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -484,7 +504,7 @@ const handleConvert = async () => {
           </button>
           {sidebarOpen && (
             <>
-              <div className="logo" onClick={() => setNavTab(null)} style={{ cursor: "pointer" }}>
+              <div className="logo" onClick={() => { setNavTab(null); setMobileMenuOpen(false); }} style={{ cursor: "pointer" }}>
                 <img 
                   src="/viking.png" 
                   alt="Andhrimnir Viking Logo" 
@@ -498,14 +518,24 @@ const handleConvert = async () => {
               <nav className="nav">
                 <button
                   className={`nav-item ${navTab === "import" ? "active" : ""} ${!isAuthenticated ? "nav-item-disabled" : ""}`}
-                  onClick={() => isAuthenticated ? handleNewImport() : signIn("google")}
+                  onClick={() => {
+                    if (isAuthenticated) {
+                      handleNewImport();
+                    } else {
+                      signIn("google");
+                    }
+                    setMobileMenuOpen(false);
+                  }}
                   title={!isAuthenticated ? "Sign in to import recipes" : undefined}
                 >
                   {isAuthenticated ? "Import recipe" : "Sign in to import"}
                 </button>
                 <button
                   className={`nav-item ${navTab === "list" ? "active" : ""}`}
-                  onClick={() => setNavTab("list")}
+                  onClick={() => {
+                    setNavTab("list");
+                    setMobileMenuOpen(false);
+                  }}
                 >
                   Saved recipes
                 </button>
