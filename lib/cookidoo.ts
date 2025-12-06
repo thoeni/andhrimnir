@@ -359,6 +359,37 @@ export async function syncRecipeToCookidoo(
     const patchData = { ...recipeData };
     delete patchData.id; // Don't send the ID in the body
     
+    // Sanitize instructions - remove any invalid annotations that would cause API errors
+    if (Array.isArray(patchData.instructions)) {
+      const validAnnotationTypes = ["INGREDIENT", "TTS", "MODE"];
+      patchData.instructions = (patchData.instructions as Array<Record<string, unknown>>).map((instruction, idx) => {
+        if (!instruction.annotations || !Array.isArray(instruction.annotations)) {
+          return instruction;
+        }
+        
+        const cleanedAnnotations = (instruction.annotations as Array<Record<string, unknown>>).filter((ann, annIdx) => {
+          // Check if type is valid
+          if (!validAnnotationTypes.includes(ann.type as string)) {
+            console.log(`[Cookidoo Sync] Removing invalid annotation type "${ann.type}" from instruction ${idx}, annotation ${annIdx}`);
+            return false;
+          }
+          
+          // MODE must have a name
+          if (ann.type === "MODE") {
+            const data = ann.data as Record<string, unknown> | undefined;
+            if (!data?.name) {
+              console.log(`[Cookidoo Sync] Removing MODE annotation without name from instruction ${idx}, annotation ${annIdx}`);
+              return false;
+            }
+          }
+          
+          return true;
+        });
+        
+        return { ...instruction, annotations: cleanedAnnotations };
+      });
+    }
+    
     const patchRes = await fetch(patchUrl, {
       method: "PATCH",
       headers: {
