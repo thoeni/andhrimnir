@@ -242,3 +242,133 @@ export async function validateCookidooToken(token: string): Promise<boolean> {
     return false;
   }
 }
+
+// ============================================================================
+// Recipe Sync Functions
+// ============================================================================
+
+interface CookidooSyncResult {
+  success: boolean;
+  recipeId?: string;
+  recipeUrl?: string;
+  error?: string;
+}
+
+/**
+ * Sync a recipe to Cookidoo.
+ * 
+ * Flow:
+ * 1. POST to create a new recipe (just the name) - returns recipe ID
+ * 2. PATCH to update the recipe with full details
+ */
+export async function syncRecipeToCookidoo(
+  token: string,
+  recipeData: Record<string, unknown>,
+  locale: string = "en-GB"
+): Promise<CookidooSyncResult> {
+  const baseUrl = `https://cookidoo.co.uk/created-recipes/${locale}`;
+  const recipeName = (recipeData.name as string) || "Untitled Recipe";
+
+  try {
+    console.log(`[Cookidoo Sync] Creating recipe: "${recipeName}"...`);
+
+    // Step 1: Create the recipe
+    const createRes = await fetch(baseUrl, {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8",
+        "Content-Type": "application/json",
+        "Origin": "https://cookidoo.co.uk",
+        "Referer": `https://cookidoo.co.uk/created-recipes/${locale}`,
+        "User-Agent": USER_AGENT,
+        "Cookie": token,
+        "X-Requested-With": "xmlhttprequest",
+      },
+      body: JSON.stringify({ recipeName }),
+    });
+
+    if (!createRes.ok) {
+      const errorText = await createRes.text();
+      console.error("[Cookidoo Sync] Create failed:", createRes.status, errorText);
+      
+      if (createRes.status === 401 || createRes.status === 403) {
+        return { success: false, error: "Session expired - please reconnect your Cookidoo account" };
+      }
+      
+      return { success: false, error: `Failed to create recipe: ${createRes.status}` };
+    }
+
+    const createData = await createRes.json();
+    const recipeId = createData.id;
+
+    if (!recipeId) {
+      console.error("[Cookidoo Sync] No recipe ID in response:", createData);
+      return { success: false, error: "No recipe ID returned from Cookidoo" };
+    }
+
+    console.log(`[Cookidoo Sync] Recipe created with ID: ${recipeId}`);
+
+    // Step 2: PATCH with full recipe data
+    console.log("[Cookidoo Sync] Updating recipe with full data...");
+
+    const patchUrl = `${baseUrl}/${recipeId}`;
+    
+    // Prepare the recipe data for PATCH
+    // Remove any fields that Cookidoo doesn't accept
+    const patchData = { ...recipeData };
+    delete patchData.id; // Don't send the ID in the body
+    
+    const patchRes = await fetch(patchUrl, {
+      method: "PATCH",
+      headers: {
+        "Accept": "application/json",
+        "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8",
+        "Content-Type": "application/json",
+        "Origin": "https://cookidoo.co.uk",
+        "Referer": `${patchUrl}/edit/ingredients-and-preparation-steps?active=steps`,
+        "User-Agent": USER_AGENT,
+        "Cookie": token,
+        "X-Requested-With": "xmlhttprequest",
+      },
+      body: JSON.stringify(patchData),
+    });
+
+    if (!patchRes.ok) {
+      const errorText = await patchRes.text();
+      console.error("[Cookidoo Sync] Patch failed:", patchRes.status, errorText);
+      
+      // Try to parse error for more details
+      try {
+        const errorJson = JSON.parse(errorText);
+        return { 
+          success: false, 
+          error: `Failed to update recipe: ${errorJson.message || errorJson.error || patchRes.status}`,
+          recipeId, // Return ID so user can manually edit
+        };
+      } catch {
+        return { 
+          success: false, 
+          error: `Failed to update recipe: ${patchRes.status}`,
+          recipeId,
+        };
+      }
+    }
+
+    const recipeUrl = `https://cookidoo.co.uk/created-recipes/${locale}/${recipeId}`;
+    console.log(`[Cookidoo Sync] Recipe synced successfully: ${recipeUrl}`);
+
+    return {
+      success: true,
+      recipeId,
+      recipeUrl,
+    };
+
+  } catch (error) {
+    console.error("[Cookidoo Sync] Error:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error occurred",
+    };
+  }
+}

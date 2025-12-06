@@ -214,6 +214,10 @@ export default function Home() {
   const [cookidooError, setCookidooError] = useState("");
   const [cookidooSuccess, setCookidooSuccess] = useState("");
   
+  // Cookidoo sync state
+  const [syncingToCookidoo, setSyncingToCookidoo] = useState(false);
+  const [cookidooRecipeUrl, setCookidooRecipeUrl] = useState<string | null>(null);
+  
   const isAuthenticated = status === "authenticated";
   const isLoading = status === "loading";
   const isAdmin = session?.user?.email === ADMIN_EMAIL;
@@ -419,6 +423,13 @@ const handleConvert = async () => {
     }
   }, [navTab, isAdmin, isAuthenticated]);
 
+  // Check Cookidoo status when recipe is shown
+  useEffect(() => {
+    if (recipe && isAuthenticated && cookidooConnected === null) {
+      checkCookidooStatus();
+    }
+  }, [recipe, isAuthenticated, cookidooConnected]);
+
   const checkCookidooStatus = async () => {
     try {
       const res = await fetch("/api/cookidoo/status");
@@ -512,51 +523,62 @@ const handleConvert = async () => {
       return;
     }
 
-    setSaveMessage("Generating link...");
+    // Check if Cookidoo is connected
+    if (!cookidooConnected) {
+      setSaveMessage("Please connect your Cookidoo account in Settings first");
+      return;
+    }
+
+    setSyncingToCookidoo(true);
+    setSaveMessage("Syncing to Cookidoo...");
+    setCookidooRecipeUrl(null);
+
     try {
-      let currentSlug = shareSlug;
-      let currentId = savedRecipeId;
+      // Map language code to Cookidoo locale
+      const localeMap: Record<string, string> = {
+        en: "en-GB",
+        it: "it-IT",
+        de: "de-DE",
+        fr: "fr-FR",
+        es: "es-ES",
+        pt: "pt-PT",
+        nl: "nl-NL",
+        pl: "pl-PL",
+      };
+      const locale = localeMap[language] || "en-GB";
 
-      // Create record if none exists
-      if (!currentId) {
-        const response = await fetch("/api/recipes", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            title: recipe.name,
-            originalUrl: lastOriginalUrl || url,
-            cookidooJson: recipe,
-          }),
-        });
-        const data = await response.json();
-        if (!response.ok) {
-          throw new Error(data?.error || "Failed to save recipe");
-        }
-        currentId = data?.recipe?.id ?? null;
-        currentSlug = data?.recipe?.share?.slug ?? null;
-        setSavedRecipeId(currentId);
-        setShareSlug(currentSlug);
-        await fetchRecipes();
+      const response = await fetch("/api/cookidoo/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          recipeData: recipe,
+          locale,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to sync recipe");
       }
 
-      // If saved but missing slug (older records), fetch to auto-create
-      if (!currentSlug && currentId) {
-        const response = await fetch(`/api/recipes/${currentId}`);
-        const data = await response.json();
-        if (!response.ok) {
-          throw new Error(data?.error || "Failed to generate share link");
-        }
-        currentSlug = data?.recipe?.share?.slug ?? null;
-        setShareSlug(currentSlug);
+      setCookidooRecipeUrl(data.recipeUrl);
+      setSaveMessage("✓ Recipe synced to Cookidoo!");
+      
+      // Open the recipe in a new tab
+      if (data.recipeUrl) {
+        window.open(data.recipeUrl, "_blank");
       }
-
-      if (!currentSlug) {
-        throw new Error("Unable to generate share link");
-      }
-
-      setShowShareModal(true);
     } catch (err) {
-      setSaveMessage(err instanceof Error ? err.message : "Failed to generate Cookidoo link");
+      const errorMessage = err instanceof Error ? err.message : "Failed to sync to Cookidoo";
+      setSaveMessage(errorMessage);
+      
+      // If session expired, refresh the connection status
+      if (errorMessage.includes("expired") || errorMessage.includes("reconnect")) {
+        setCookidooConnected(false);
+      }
+    } finally {
+      setSyncingToCookidoo(false);
     }
   };
 
@@ -893,15 +915,41 @@ const handleConvert = async () => {
                       </button>
                       <button
                         onClick={handleSendToCookidoo}
-                        className="btn-secondary"
-                        title={shareUrl ? `Show Cookidoo link` : "Save first to generate a Cookidoo link"}
+                        className={`btn-secondary ${!cookidooConnected ? 'btn-disabled' : ''}`}
+                        disabled={syncingToCookidoo || !cookidooConnected}
+                        title={
+                          !cookidooConnected 
+                            ? "Connect Cookidoo account in Settings first" 
+                            : cookidooRecipeUrl 
+                            ? "Recipe synced! Click to sync again" 
+                            : "Sync recipe to your Cookidoo account"
+                        }
                       >
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7" />
-                          <path d="M16 6l-4-4-4 4" />
-                          <path d="M12 2v14" />
-                        </svg>
-                        {"Send to Cookidoo"}
+                        {syncingToCookidoo ? (
+                          <>
+                            <svg className="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <circle cx="12" cy="12" r="10" opacity="0.25" />
+                              <path d="M12 2a10 10 0 0 1 10 10" />
+                            </svg>
+                            Syncing...
+                          </>
+                        ) : cookidooRecipeUrl ? (
+                          <>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M20 6L9 17l-5-5" />
+                            </svg>
+                            Synced to Cookidoo
+                          </>
+                        ) : (
+                          <>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7" />
+                              <path d="M16 6l-4-4-4 4" />
+                              <path d="M12 2v14" />
+                            </svg>
+                            {cookidooConnected ? "Send to Cookidoo" : "Connect Cookidoo"}
+                          </>
+                        )}
                       </button>
                       <button onClick={resetToInput} className="btn-ghost">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
