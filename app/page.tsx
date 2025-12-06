@@ -106,6 +106,7 @@ interface StoredRecipeDetail {
   title: string;
   originalUrl: string;
   createdAt: string;
+  language?: string;
   share?: { slug: string };
   cookidooJson: CookidooRecipe;
   cookidooId?: string | null;
@@ -487,12 +488,46 @@ const handleConvert = async () => {
       setLastOriginalUrl(saved.originalUrl);
       setSavedRecipeId(saved.id);
       setShareSlug(saved.share?.slug ?? null);
-      // Set sync status
-      setIsRecipeSynced(!!saved.cookidooId);
-      setCookidooRecipeUrl(saved.cookidooUrl || null);
+      
+      // Verify Cookidoo sync status if recipe was synced
+      let stillSynced = !!saved.cookidooId;
+      if (saved.cookidooId && cookidooConnected) {
+        setLoadingStatus("Verifying Cookidoo sync...");
+        try {
+          const localeMap: Record<string, string> = {
+            en: "en-GB", it: "it-IT", de: "de-DE", fr: "fr-FR",
+            es: "es-ES", pt: "pt-PT", nl: "nl-NL", pl: "pl-PL",
+          };
+          const locale = localeMap[saved.language || language] || "en-GB";
+          
+          const verifyResponse = await fetch("/api/cookidoo/verify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              savedRecipeId: saved.id,
+              cookidooId: saved.cookidooId,
+              locale,
+            }),
+          });
+          const verifyData = await verifyResponse.json();
+          
+          if (!verifyData.exists) {
+            // Recipe was deleted from Cookidoo
+            stillSynced = false;
+            // Refresh recipe list to update status
+            fetchRecipes();
+          }
+        } catch {
+          // On verification error, keep the status as-is
+          console.log("Cookidoo verification failed, keeping current status");
+        }
+      }
+      
+      setIsRecipeSynced(stillSynced);
+      setCookidooRecipeUrl(stillSynced ? saved.cookidooUrl || null : null);
       setViewState("result");
       setNavTab("import");
-      setSaveMessage(saved.cookidooId ? "Loaded synced recipe" : "Loaded from saved recipe");
+      setSaveMessage(stillSynced ? "Loaded synced recipe" : "Loaded from saved recipe");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load recipe");
       setViewState("error");
