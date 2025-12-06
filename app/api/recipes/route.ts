@@ -9,13 +9,16 @@ import { generateUniqueSlug } from "@/lib/slug";
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
+    
+    // Require authentication to list recipes
+    if (!session?.user?.id) {
+      return NextResponse.json({ recipes: [], requiresAuth: true });
+    }
+    
     const limit = Math.min(Number(request.nextUrl.searchParams.get("limit") ?? 20), 100);
     
-    // Filter by user if logged in, otherwise show all (for backwards compatibility)
-    const where = session?.user?.id ? { userId: session.user.id } : {};
-    
     const recipes = await prisma.recipe.findMany({
-      where,
+      where: { userId: session.user.id },
       orderBy: { createdAt: "desc" },
       take: limit,
       select: {
