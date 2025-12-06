@@ -10,11 +10,28 @@ const USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/
  * Extract cookies from Set-Cookie headers and merge with existing cookies
  */
 function extractCookies(response: Response, existingCookies: Map<string, string>): void {
-  const setCookies = response.headers.getSetCookie?.() || [];
+  // Try getSetCookie() first (modern API)
+  let setCookies: string[] = [];
+  
+  if (typeof response.headers.getSetCookie === 'function') {
+    setCookies = response.headers.getSetCookie();
+  }
+  
+  // Fallback: try to get raw set-cookie header
+  // Note: In Node.js fetch, multiple set-cookie headers may be combined
+  if (setCookies.length === 0) {
+    const rawCookies = response.headers.get('set-cookie');
+    if (rawCookies) {
+      // Split on comma, but be careful not to split on commas within cookie values
+      // A simple approach: split on ", " followed by a word and "="
+      setCookies = rawCookies.split(/,\s*(?=[^;]+=)/);
+    }
+  }
+  
   for (const cookie of setCookies) {
     const [nameValue] = cookie.split(";");
     const [name, ...valueParts] = nameValue.split("=");
-    if (name) {
+    if (name && name.trim()) {
       existingCookies.set(name.trim(), valueParts.join("="));
     }
   }
@@ -152,7 +169,8 @@ export async function loginToCookidoo(
     
     while (location && redirectCount < maxRedirects) {
       redirectCount++;
-      console.log(`[Cookidoo] Redirect ${redirectCount}: ${location.substring(0, 60)}...`);
+      const domain = new URL(location).hostname;
+      console.log(`[Cookidoo] Redirect ${redirectCount} to ${domain}: ${location.substring(0, 80)}...`);
       
       const redirectRes = await fetch(location, {
         headers: {
@@ -164,12 +182,24 @@ export async function loginToCookidoo(
         redirect: "manual",
       });
 
+      // Log cookies received from this redirect
+      const newCookies = redirectRes.headers.getSetCookie?.() || [];
+      if (newCookies.length > 0) {
+        console.log(`[Cookidoo] Cookies from ${domain}:`, newCookies.map(c => c.split('=')[0]).join(', '));
+      }
+
       extractCookies(redirectRes, cookies);
       location = redirectRes.headers.get("location");
       
       // Check if we've reached Cookidoo
-      if (redirectRes.url.includes("cookidoo.") && redirectRes.status === 200) {
+      if (domain.includes("cookidoo.") && redirectRes.status === 200) {
         console.log("[Cookidoo] Reached Cookidoo successfully!");
+        break;
+      }
+      
+      // Also check if response URL is on Cookidoo (might differ from location)
+      if (redirectRes.url.includes("cookidoo.") && redirectRes.status === 200) {
+        console.log("[Cookidoo] Landed on Cookidoo!");
         break;
       }
     }
@@ -271,6 +301,16 @@ export async function syncRecipeToCookidoo(
 
   try {
     console.log(`[Cookidoo Sync] Creating recipe: "${recipeName}"...`);
+    
+    // Log token info for debugging (first 100 chars, hiding sensitive parts)
+    console.log(`[Cookidoo Sync] Token length: ${token.length}`);
+    console.log(`[Cookidoo Sync] Token cookies: ${token.split(';').map(c => c.split('=')[0].trim()).join(', ')}`);
+    
+    // Ensure we have the language cookie
+    let cookieString = token;
+    if (!token.includes('tmde-lang=')) {
+      cookieString = `tmde-lang=${locale}; ${token}`;
+    }
 
     // Step 1: Create the recipe
     const createRes = await fetch(baseUrl, {
@@ -282,7 +322,7 @@ export async function syncRecipeToCookidoo(
         "Origin": "https://cookidoo.co.uk",
         "Referer": `https://cookidoo.co.uk/created-recipes/${locale}`,
         "User-Agent": USER_AGENT,
-        "Cookie": token,
+        "Cookie": cookieString,
         "X-Requested-With": "xmlhttprequest",
       },
       body: JSON.stringify({ recipeName }),

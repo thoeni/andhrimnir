@@ -27,6 +27,15 @@ export async function GET() {
       });
     }
 
+    // Log token info for debugging
+    const cookieNames = user.cookidooToken.split(';').map(c => c.split('=')[0].trim());
+    console.log("[Cookidoo Status] Stored cookies:", cookieNames.join(', '));
+    
+    // Check for essential cookies
+    const hasOauth2Proxy = cookieNames.includes('_oauth2_proxy');
+    const hasVAuthenticated = cookieNames.includes('v-authenticated');
+    console.log(`[Cookidoo Status] Has _oauth2_proxy: ${hasOauth2Proxy}, Has v-authenticated: ${hasVAuthenticated}`);
+
     // Check if token is expired
     if (user.cookidooTokenExp && new Date(user.cookidooTokenExp) < new Date()) {
       return NextResponse.json({ 
