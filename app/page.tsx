@@ -652,8 +652,8 @@ const handleConvert = async () => {
 
           {navTab === "import" && (
             <>
-              {/* Auth Gate for Import */}
-              {!isAuthenticated ? (
+              {/* Auth Gate for Import - but allow viewing saved recipes without auth */}
+              {!isAuthenticated && !savedRecipeId && viewState === "input" ? (
                 <section className="auth-gate">
                   <div className="auth-gate-content">
                     <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" strokeWidth="1.5">
