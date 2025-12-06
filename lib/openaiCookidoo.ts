@@ -130,8 +130,8 @@ function fixAnnotationOffsets(instructions: Instruction[]): Instruction[] {
       if (annotation.type === "MODE") {
         const modeData = annotation.data as { name?: string; time?: number; speed?: string };
         
-        // MODE name must be one of the valid modes
-        const validModes = ["dough", "varoma", "turbo", "leftover", "fermentation", "slow_cook", "keep_warm"];
+        // MODE name must be one of the valid modes (from official Cookidoo examples)
+        const validModes = ["dough", "turbo", "warm_up", "blend", "rice_cooker"];
         let modeName = modeData.name?.toLowerCase() || "";
         
         // Try to infer the mode from the step text if name is missing or invalid

@@ -362,8 +362,8 @@ export async function syncRecipeToCookidoo(
     // Sanitize instructions - remove any invalid annotations that would cause API errors
     if (Array.isArray(patchData.instructions)) {
       const validAnnotationTypes = ["INGREDIENT", "TTS", "MODE"];
-      // Valid MODE names that Cookidoo accepts
-      const validModeNames = ["dough", "turbo", "sous-vide", "slow_cooking", "fermentation", "keep_warm"];
+      // Valid MODE names that Cookidoo accepts (from official recipe examples)
+      const validModeNames = ["dough", "turbo", "warm_up", "blend", "rice_cooker"];
       
       patchData.instructions = (patchData.instructions as Array<Record<string, unknown>>).map((instruction, idx) => {
         if (!instruction.annotations || !Array.isArray(instruction.annotations)) {

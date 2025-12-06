@@ -225,13 +225,21 @@ For VOLUME annotations inside description:
 3. Keep Thermomix notation: min., sec., vel., °C
 4. Time values in "data" are in SECONDS (5 min = 300)
 5. Use metric only (g, ml, °C)
-6. temperature.value must be NUMERIC ("100", "120")
-7. 🚨 NEVER use "Varoma" as temperature.value - use MODE annotation instead:
-   ❌ WRONG: { "type": "TTS", "data": { "temperature": { "value": "Varoma" } } }
-   ✅ CORRECT: { "type": "MODE", "data": { "name": "varoma", "time": 120 } }
+6. temperature.value must be NUMERIC ("100", "120", "Varoma")
+   - "Varoma" is the ONLY non-numeric value allowed - it means max steaming temp (~120°C)
+   - Use it for steaming: { "type": "TTS", "data": { "temperature": { "value": "Varoma", "unit": "C" }, "time": 600, "speed": "1" } }
    
-   MODE ANNOTATIONS: Only have "name" (required) and "time" (optional). NO speed field!
-   Valid names: "varoma", "dough", "warm up", "turbo"
+7. MODE ANNOTATIONS - for special Thermomix functions:
+   - Only have "name" (required) and "time" (optional in seconds). NO speed field!
+   - 🚨 VALID MODE NAMES ONLY:
+     • "dough" - for kneading dough
+     • "turbo" - for quick 1-second bursts
+     • "warm_up" - for warming/preheating
+     • "blend" - for blending mode
+     • "rice_cooker" - for rice cooking mode
+   
+   ❌ WRONG modes (will cause API errors): "varoma", "pressure", "cook", "slow_cook"
+   ✅ CORRECT: { "type": "MODE", "data": { "name": "dough", "time": 120 } }
 
 8. 🚨 DIRECTION IS CRITICAL - determines if blades cut or stir:
    
@@ -327,7 +335,22 @@ CLOCKWISE (omit direction field):
 ✅ CORRECT - sauté with reverse:
 { "type": "TTS", "data": { "time": 300, "speed": "1", "direction": "CCW", "temperature": { "value": "120" } } }
 
-=== RULE 5: PRESERVE INGREDIENT ARRAY FORMAT ===
+=== RULE 5: VALID MODE NAMES ONLY ===
+
+🚨 MODE annotations can ONLY use these names:
+- "dough" - for kneading
+- "turbo" - for 1-second bursts
+- "warm_up" - for preheating
+- "blend" - for blend mode
+- "rice_cooker" - for rice cooking
+
+❌ INVALID MODE names (REMOVE these annotations entirely):
+- "varoma" - this is a TEMPERATURE, not a mode! Use TTS with temperature.value="Varoma"
+- "pressure", "slow_cook", "cook", "high pressure", "simmer"
+
+If you see a MODE annotation with an invalid name, REMOVE the annotation completely.
+
+=== RULE 6: PRESERVE INGREDIENT ARRAY FORMAT ===
 
 🚨 DO NOT change the format of the "ingredients" array!
 
