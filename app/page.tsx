@@ -206,6 +206,14 @@ export default function Home() {
   const [shareSlug, setShareSlug] = useState<string | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
   
+  // Cookidoo connection state
+  const [cookidooConnected, setCookidooConnected] = useState<boolean | null>(null);
+  const [cookidooEmail, setCookidooEmail] = useState("");
+  const [cookidooPassword, setCookidooPassword] = useState("");
+  const [cookidooLoading, setCookidooLoading] = useState(false);
+  const [cookidooError, setCookidooError] = useState("");
+  const [cookidooSuccess, setCookidooSuccess] = useState("");
+  
   const isAuthenticated = status === "authenticated";
   const isLoading = status === "loading";
   const isAdmin = session?.user?.email === ADMIN_EMAIL;
@@ -406,7 +414,70 @@ const handleConvert = async () => {
     if (navTab === "admin" && isAdmin) {
       fetchAdminRecipes();
     }
-  }, [navTab, isAdmin]);
+    if (navTab === "settings" && isAuthenticated) {
+      checkCookidooStatus();
+    }
+  }, [navTab, isAdmin, isAuthenticated]);
+
+  const checkCookidooStatus = async () => {
+    try {
+      const res = await fetch("/api/cookidoo/status");
+      const data = await res.json();
+      setCookidooConnected(data.connected);
+    } catch {
+      setCookidooConnected(false);
+    }
+  };
+
+  const handleCookidooConnect = async () => {
+    if (!cookidooEmail || !cookidooPassword) {
+      setCookidooError("Please enter both email and password");
+      return;
+    }
+
+    setCookidooLoading(true);
+    setCookidooError("");
+    setCookidooSuccess("");
+
+    try {
+      const res = await fetch("/api/cookidoo/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          email: cookidooEmail, 
+          password: cookidooPassword 
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to connect");
+      }
+
+      setCookidooConnected(true);
+      setCookidooSuccess("Cookidoo account connected successfully!");
+      setCookidooEmail("");
+      setCookidooPassword("");
+    } catch (err) {
+      setCookidooError(err instanceof Error ? err.message : "Failed to connect");
+    } finally {
+      setCookidooLoading(false);
+    }
+  };
+
+  const handleCookidooDisconnect = async () => {
+    setCookidooLoading(true);
+    try {
+      await fetch("/api/cookidoo/status", { method: "DELETE" });
+      setCookidooConnected(false);
+      setCookidooSuccess("Cookidoo account disconnected");
+    } catch {
+      setCookidooError("Failed to disconnect");
+    } finally {
+      setCookidooLoading(false);
+    }
+  };
 
   const handleCopy = async () => {
     if (!recipe) return;
@@ -1082,9 +1153,70 @@ const handleConvert = async () => {
                 </div>
               </div>
 
-              <div className="settings-card settings-card-muted">
+              <div className={`settings-card ${cookidooConnected ? '' : 'settings-card-muted'}`}>
                 <h3>Cookidoo Account</h3>
-                <p className="helper-text">Coming soon - Link your Cookidoo account to sync recipes directly.</p>
+                
+                {cookidooConnected === null ? (
+                  <p className="helper-text">Checking connection status...</p>
+                ) : cookidooConnected ? (
+                  <div className="cookidoo-connected">
+                    <div className="cookidoo-status">
+                      <span className="status-badge status-connected">✓ Connected</span>
+                      <p className="helper-text">Your Cookidoo account is linked. You can sync recipes directly.</p>
+                    </div>
+                    <button 
+                      className="btn-secondary btn-sm"
+                      onClick={handleCookidooDisconnect}
+                      disabled={cookidooLoading}
+                    >
+                      {cookidooLoading ? "Disconnecting..." : "Disconnect"}
+                    </button>
+                  </div>
+                ) : (
+                  <div className="cookidoo-connect">
+                    <p className="helper-text">Link your Cookidoo account to sync recipes directly to your Thermomix.</p>
+                    
+                    {cookidooError && (
+                      <div className="cookidoo-message cookidoo-error">{cookidooError}</div>
+                    )}
+                    {cookidooSuccess && (
+                      <div className="cookidoo-message cookidoo-success">{cookidooSuccess}</div>
+                    )}
+                    
+                    <div className="cookidoo-form">
+                      <div className="settings-field">
+                        <label>Cookidoo Email</label>
+                        <input
+                          type="email"
+                          value={cookidooEmail}
+                          onChange={(e) => setCookidooEmail(e.target.value)}
+                          placeholder="your@email.com"
+                          className="cookidoo-input"
+                        />
+                      </div>
+                      <div className="settings-field">
+                        <label>Cookidoo Password</label>
+                        <input
+                          type="password"
+                          value={cookidooPassword}
+                          onChange={(e) => setCookidooPassword(e.target.value)}
+                          placeholder="••••••••"
+                          className="cookidoo-input"
+                        />
+                      </div>
+                      <button
+                        className="btn-primary btn-sm"
+                        onClick={handleCookidooConnect}
+                        disabled={cookidooLoading || !cookidooEmail || !cookidooPassword}
+                      >
+                        {cookidooLoading ? "Connecting..." : "Connect Account"}
+                      </button>
+                      <p className="cookidoo-disclaimer">
+                        Your credentials are used only to authenticate with Cookidoo and are not stored.
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="settings-card">

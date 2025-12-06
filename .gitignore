@@ -9,3 +9,5 @@ node_modules
 
 # Prisma
 /lib/generated/prisma
+
+*.ignore

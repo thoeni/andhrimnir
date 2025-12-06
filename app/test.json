@@ -730,3 +730,24 @@
         }
     ]
 }
+
+
+curl 'https://ciam.prod.cookidoo.vorwerk-digital.com/login-srv/login' \
+  -H 'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: max-age=0' \
+  -H 'content-type: application/x-www-form-urlencoded' \
+  -b 'cidaas_dr=7c4c231f-0775-442b-9cdd-ad59f681acb5; __cf_bm=mTMtqDeeB1uLf8bIcHWopG2PYbmqmnRlgwAJAIVPDz4-1765051814-1.0.1.1-fZZYk17DZbqrzsr5WYMyuPqGu_zD6V0koErrQj6NPWVlwyl4EYLg58G6wXT3OsppEv5PvQiG.bv1Zt3OW40NubCh4AhAuWvETitxbehZApQ' \
+  -H 'origin: https://eu.login.vorwerk.com' \
+  -H 'priority: u=0, i' \
+  -H 'referer: https://eu.login.vorwerk.com/' \
+  -H 'sec-ch-ua: "Google Chrome";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: document' \
+  -H 'sec-fetch-mode: navigate' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'sec-fetch-user: ?1' \
+  -H 'upgrade-insecure-requests: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  --data-raw 'requestId=5014b13b-590a-4975-b74c-ea78fdf8ae66&username=thoeni%40gmail.com&password=XXXXXX%40LVqLR'

@@ -18,6 +18,10 @@ model User {
   accounts      Account[]
   recipes       Recipe[]
   sessions      Session[]
+  
+  // Cookidoo integration
+  cookidooToken     String?   @db.Text
+  cookidooTokenExp  DateTime?
 
   @@map("users")
 }

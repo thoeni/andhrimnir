@@ -1732,6 +1732,109 @@ footer a:hover {
   border-color: #f87171;
 }
 
+/* Cookidoo Connection */
+.cookidoo-connected {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.cookidoo-status {
+  flex: 1;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: var(--space-sm);
+}
+
+.status-connected {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-disconnected {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.cookidoo-connect {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.cookidoo-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding-top: var(--space-sm);
+}
+
+.cookidoo-input {
+  width: 100%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: var(--space-sm) var(--space-md);
+  font-size: 0.9375rem;
+  color: var(--text-primary);
+  transition: var(--transition-fast);
+}
+
+.cookidoo-input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.cookidoo-input::placeholder {
+  color: var(--text-muted);
+}
+
+.cookidoo-message {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+
+.cookidoo-error {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.cookidoo-success {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.cookidoo-disclaimer {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.btn-sm {
+  padding: var(--space-sm) var(--space-md);
+  font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+  .cookidoo-connected {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
 @media (max-width: 768px) {
   .settings-profile {
     flex-direction: column;
