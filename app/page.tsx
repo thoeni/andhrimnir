@@ -694,19 +694,6 @@ const handleConvert = async () => {
             </section>
           )}
 
-          {/* Hero Section - only show when not on landing */}
-          {navTab !== null && (
-            <header className="hero">
-              <p className="tagline">
-                Transform any recipe into <span className="highlight">Thermomix magic</span>
-              </p>
-              <p className="subtitle">
-                Paste a recipe URL from your favorite food blog. We&apos;ll convert it to Cookidoo format with precise times,
-                temperatures, and speeds.
-              </p>
-            </header>
-          )}
-
           {navTab === "import" && (
             <>
               {/* Auth Gate for Import - but allow viewing saved recipes without auth */}
