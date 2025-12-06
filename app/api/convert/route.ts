@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
 import { convertToCookidoo } from "@/lib/openaiCookidoo";
 import { fetchRecipe } from "@/lib/recipeFetcher";
 import { RecipeUrlRequestSchema } from "@/lib/validation";
+import { authOptions } from "@/lib/auth";
 
 // Simple in-memory rate limit (per IP) to protect the endpoint and OpenAI quota
 const RATE_LIMIT_WINDOW_MS = 60_000;
@@ -22,6 +24,12 @@ function rateLimit(ip: string): boolean {
 
 export async function POST(request: NextRequest) {
   try {
+    // Require authentication for recipe conversion
+    const session = await getServerSession(authOptions);
+    if (!session?.user) {
+      return NextResponse.json({ error: "Please sign in to convert recipes" }, { status: 401 });
+    }
+
     const ip =
       request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
       request.headers.get("x-real-ip") ||
