@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
         share: { select: { slug: true } },
       },
     });
-    const mapped = recipes.map((r) => ({
+    const mapped = recipes.map((r: typeof recipes[number]) => ({
       ...r,
       slug: r.share?.slug ?? null,
     }));
