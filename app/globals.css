@@ -1906,8 +1906,27 @@ footer a:hover {
 }
 
 .btn-sm {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: var(--space-sm) var(--space-md);
   font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.btn-sm.btn-danger {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+
+.btn-sm.btn-danger:hover {
+  background: #fee2e2;
+  border-color: #f87171;
 }
 
 @media (max-width: 768px) {
