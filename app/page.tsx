@@ -73,7 +73,7 @@ interface CookidooRecipe {
 }
 
 type ViewState = "input" | "loading" | "result" | "error";
-type NavTab = "import" | "list";
+type NavTab = "import" | "list" | "settings";
 const LANG_OPTIONS = [
   { code: "en", label: "English", flag: "🇬🇧" },
   { code: "it", label: "Italiano", flag: "🇮🇹" },
@@ -539,6 +539,17 @@ const handleConvert = async () => {
                 >
                   Saved recipes
                 </button>
+                {isAuthenticated && (
+                  <button
+                    className={`nav-item ${navTab === "settings" ? "active" : ""}`}
+                    onClick={() => {
+                      setNavTab("settings");
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    Settings
+                  </button>
+                )}
               </nav>
               
               {/* Auth Section */}
@@ -1004,6 +1015,54 @@ const handleConvert = async () => {
               )}
               </>
               )}
+            </section>
+          )}
+
+          {/* Settings Section */}
+          {navTab === "settings" && isAuthenticated && (
+            <section className="settings-section">
+              <div className="settings-header">
+                <h2>Settings</h2>
+                <p className="helper-text">Manage your account and preferences</p>
+              </div>
+              
+              <div className="settings-card">
+                <h3>Profile</h3>
+                <div className="settings-profile">
+                  {session?.user?.image && (
+                    <img 
+                      src={session.user.image} 
+                      alt={session.user.name || "User"} 
+                      className="settings-avatar"
+                    />
+                  )}
+                  <div className="settings-profile-info">
+                    <div className="settings-field">
+                      <label>Name</label>
+                      <span>{session?.user?.name || "Not provided"}</span>
+                    </div>
+                    <div className="settings-field">
+                      <label>Email</label>
+                      <span>{session?.user?.email || "Not provided"}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="settings-card settings-card-muted">
+                <h3>Cookidoo Account</h3>
+                <p className="helper-text">Coming soon - Link your Cookidoo account to sync recipes directly.</p>
+              </div>
+
+              <div className="settings-card">
+                <h3>Account</h3>
+                <button 
+                  className="btn-secondary btn-danger"
+                  onClick={() => signOut()}
+                >
+                  Sign out
+                </button>
+              </div>
             </section>
           )}
 
