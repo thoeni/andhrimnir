@@ -1841,6 +1841,70 @@ footer a:hover {
   font-style: italic;
 }
 
+.cookidoo-mode-toggle {
+  display: flex;
+  gap: 0;
+  margin-bottom: var(--space-md);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.mode-btn {
+  flex: 1;
+  padding: var(--space-sm) var(--space-md);
+  border: none;
+  background: var(--bg-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.mode-btn:first-child {
+  border-right: 1px solid var(--border-color);
+}
+
+.mode-btn:hover {
+  background: var(--gray-100);
+}
+
+.mode-btn.active {
+  background: var(--accent-primary);
+  color: white;
+}
+
+.cookidoo-textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: monospace;
+  font-size: 0.8125rem;
+}
+
+.cookidoo-help {
+  margin-top: var(--space-md);
+  padding: var(--space-md);
+  background: var(--gray-50);
+  border-radius: 8px;
+}
+
+.cookidoo-steps {
+  margin: var(--space-sm) 0 0 var(--space-md);
+  padding: 0;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+.cookidoo-steps li {
+  margin-bottom: var(--space-xs);
+}
+
+.cookidoo-steps a {
+  color: var(--accent-primary);
+  text-decoration: underline;
+}
+
 .btn-sm {
   padding: var(--space-sm) var(--space-md);
   font-size: 0.875rem;

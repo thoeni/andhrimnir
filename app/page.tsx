@@ -213,6 +213,8 @@ export default function Home() {
   const [cookidooLoading, setCookidooLoading] = useState(false);
   const [cookidooError, setCookidooError] = useState("");
   const [cookidooSuccess, setCookidooSuccess] = useState("");
+  const [cookidooManualMode, setCookidooManualMode] = useState(false);
+  const [cookidooManualToken, setCookidooManualToken] = useState("");
   
   // Cookidoo sync state
   const [syncingToCookidoo, setSyncingToCookidoo] = useState(false);
@@ -566,6 +568,49 @@ const handleConvert = async () => {
       setCookidooSuccess("Cookidoo account disconnected");
     } catch {
       setCookidooError("Failed to disconnect");
+    } finally {
+      setCookidooLoading(false);
+    }
+  };
+
+  const handleCookidooManualSave = async () => {
+    if (!cookidooManualToken.trim()) {
+      setCookidooError("Please paste your cookie string");
+      return;
+    }
+
+    // Validate it has the required cookies
+    const hasOauth2 = cookidooManualToken.includes('_oauth2_proxy=');
+    const hasVAuth = cookidooManualToken.includes('v-authenticated=');
+    
+    if (!hasOauth2 || !hasVAuth) {
+      setCookidooError("Cookie string must contain _oauth2_proxy and v-authenticated");
+      return;
+    }
+
+    setCookidooLoading(true);
+    setCookidooError("");
+    setCookidooSuccess("");
+
+    try {
+      const res = await fetch("/api/cookidoo/manual-token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: cookidooManualToken.trim() }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to save token");
+      }
+
+      setCookidooConnected(true);
+      setCookidooSuccess("Cookidoo token saved successfully!");
+      setCookidooManualToken("");
+      setCookidooManualMode(false);
+    } catch (err) {
+      setCookidooError(err instanceof Error ? err.message : "Failed to save token");
     } finally {
       setCookidooLoading(false);
     }
@@ -1311,39 +1356,90 @@ const handleConvert = async () => {
                     {cookidooSuccess && (
                       <div className="cookidoo-message cookidoo-success">{cookidooSuccess}</div>
                     )}
-                    
-                    <div className="cookidoo-form">
-                      <div className="settings-field">
-                        <label>Cookidoo Email</label>
-                        <input
-                          type="email"
-                          value={cookidooEmail}
-                          onChange={(e) => setCookidooEmail(e.target.value)}
-                          placeholder="your@email.com"
-                          className="cookidoo-input"
-                        />
-                      </div>
-                      <div className="settings-field">
-                        <label>Cookidoo Password</label>
-                        <input
-                          type="password"
-                          value={cookidooPassword}
-                          onChange={(e) => setCookidooPassword(e.target.value)}
-                          placeholder="••••••••"
-                          className="cookidoo-input"
-                        />
-                      </div>
+
+                    {/* Toggle between auto and manual modes */}
+                    <div className="cookidoo-mode-toggle">
                       <button
-                        className="btn-primary btn-sm"
-                        onClick={handleCookidooConnect}
-                        disabled={cookidooLoading || !cookidooEmail || !cookidooPassword}
+                        className={`mode-btn ${!cookidooManualMode ? 'active' : ''}`}
+                        onClick={() => setCookidooManualMode(false)}
                       >
-                        {cookidooLoading ? "Connecting..." : "Connect Account"}
+                        Auto Login
                       </button>
-                      <p className="cookidoo-disclaimer">
-                        Your credentials are used only to authenticate with Cookidoo and are not stored.
-                      </p>
+                      <button
+                        className={`mode-btn ${cookidooManualMode ? 'active' : ''}`}
+                        onClick={() => setCookidooManualMode(true)}
+                      >
+                        Manual Token
+                      </button>
                     </div>
+                    
+                    {!cookidooManualMode ? (
+                      <div className="cookidoo-form">
+                        <div className="settings-field">
+                          <label>Cookidoo Email</label>
+                          <input
+                            type="email"
+                            value={cookidooEmail}
+                            onChange={(e) => setCookidooEmail(e.target.value)}
+                            placeholder="your@email.com"
+                            className="cookidoo-input"
+                          />
+                        </div>
+                        <div className="settings-field">
+                          <label>Cookidoo Password</label>
+                          <input
+                            type="password"
+                            value={cookidooPassword}
+                            onChange={(e) => setCookidooPassword(e.target.value)}
+                            placeholder="••••••••"
+                            className="cookidoo-input"
+                          />
+                        </div>
+                        <button
+                          className="btn-primary btn-sm"
+                          onClick={handleCookidooConnect}
+                          disabled={cookidooLoading || !cookidooEmail || !cookidooPassword}
+                        >
+                          {cookidooLoading ? "Connecting..." : "Connect Account"}
+                        </button>
+                        <p className="cookidoo-disclaimer">
+                          Your credentials are used only to authenticate with Cookidoo and are not stored.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="cookidoo-form">
+                        <div className="settings-field">
+                          <label>Cookie String</label>
+                          <textarea
+                            value={cookidooManualToken}
+                            onChange={(e) => setCookidooManualToken(e.target.value)}
+                            placeholder="Paste your cookie string from browser DevTools..."
+                            className="cookidoo-input cookidoo-textarea"
+                            rows={4}
+                          />
+                        </div>
+                        <button
+                          className="btn-primary btn-sm"
+                          onClick={handleCookidooManualSave}
+                          disabled={cookidooLoading || !cookidooManualToken.trim()}
+                        >
+                          {cookidooLoading ? "Saving..." : "Save Token"}
+                        </button>
+                        <div className="cookidoo-help">
+                          <p className="cookidoo-disclaimer">
+                            <strong>How to get your cookie string:</strong>
+                          </p>
+                          <ol className="cookidoo-steps">
+                            <li>Open <a href="https://cookidoo.co.uk" target="_blank" rel="noreferrer">cookidoo.co.uk</a> and log in</li>
+                            <li>Open DevTools (F12) → Network tab</li>
+                            <li>Refresh the page</li>
+                            <li>Click any request to cookidoo.co.uk</li>
+                            <li>Find &quot;Cookie:&quot; in Request Headers</li>
+                            <li>Copy the entire cookie value and paste here</li>
+                          </ol>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
