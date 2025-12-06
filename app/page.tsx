@@ -73,7 +73,9 @@ interface CookidooRecipe {
 }
 
 type ViewState = "input" | "loading" | "result" | "error";
-type NavTab = "import" | "list" | "settings";
+type NavTab = "import" | "list" | "settings" | "admin";
+
+const ADMIN_EMAIL = "thoeni@gmail.com";
 const LANG_OPTIONS = [
   { code: "en", label: "English", flag: "🇬🇧" },
   { code: "it", label: "Italiano", flag: "🇮🇹" },
@@ -206,6 +208,18 @@ export default function Home() {
   
   const isAuthenticated = status === "authenticated";
   const isLoading = status === "loading";
+  const isAdmin = session?.user?.email === ADMIN_EMAIL;
+  
+  // Admin state
+  const [adminRecipes, setAdminRecipes] = useState<Array<{
+    id: string;
+    title: string;
+    originalUrl: string;
+    createdAt: string;
+    language?: string;
+    user?: { email: string; name: string };
+  }>>([]);
+  const [adminLoading, setAdminLoading] = useState(false);
 
 const SAMPLE_URL = "https://www.seriouseats.com/mushroom-risotto-recipe-5279129";
 
@@ -333,10 +347,28 @@ const handleConvert = async () => {
         throw new Error(data?.error || "Failed to delete recipe");
       }
       setRecipes((prev) => prev.filter((r) => r.id !== id));
+      setAdminRecipes((prev) => prev.filter((r) => r.id !== id));
     } catch (err) {
       setListError(err instanceof Error ? err.message : "Failed to delete recipe");
     } finally {
       setDeletingId(null);
+    }
+  };
+
+  const fetchAdminRecipes = async () => {
+    if (!isAdmin) return;
+    setAdminLoading(true);
+    try {
+      const response = await fetch("/api/admin/recipes");
+      if (!response.ok) {
+        throw new Error("Failed to load admin recipes");
+      }
+      const data = await response.json();
+      setAdminRecipes(data.recipes || []);
+    } catch (err) {
+      console.error("Admin fetch error:", err);
+    } finally {
+      setAdminLoading(false);
     }
   };
 
@@ -371,7 +403,10 @@ const handleConvert = async () => {
     if (navTab === "list") {
       fetchRecipes();
     }
-  }, [navTab]);
+    if (navTab === "admin" && isAdmin) {
+      fetchAdminRecipes();
+    }
+  }, [navTab, isAdmin]);
 
   const handleCopy = async () => {
     if (!recipe) return;
@@ -548,6 +583,17 @@ const handleConvert = async () => {
                     }}
                   >
                     Settings
+                  </button>
+                )}
+                {isAdmin && (
+                  <button
+                    className={`nav-item nav-item-admin ${navTab === "admin" ? "active" : ""}`}
+                    onClick={() => {
+                      setNavTab("admin");
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    🔧 Admin
                   </button>
                 )}
               </nav>
@@ -1063,6 +1109,89 @@ const handleConvert = async () => {
                   Sign out
                 </button>
               </div>
+            </section>
+          )}
+
+          {/* Admin Section */}
+          {navTab === "admin" && isAdmin && (
+            <section className="admin-section">
+              <div className="admin-header">
+                <div>
+                  <h2>🔧 Admin Panel</h2>
+                  <p className="helper-text">View all recipes from all users</p>
+                </div>
+                <button
+                  className="icon-button"
+                  onClick={fetchAdminRecipes}
+                  disabled={adminLoading}
+                  title="Refresh"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21 12a9 9 0 1 1-3-6.708" />
+                    <polyline points="21 3 21 9 15 9" />
+                  </svg>
+                </button>
+              </div>
+
+              {adminLoading ? (
+                <div className="loading-state">Loading all recipes...</div>
+              ) : adminRecipes.length === 0 ? (
+                <div className="empty-state">
+                  <p className="helper-text">No recipes found across all users.</p>
+                </div>
+              ) : (
+                <div className="admin-table">
+                  <div className="admin-table-header">
+                    <span>Recipe</span>
+                    <span>User</span>
+                    <span>Language</span>
+                    <span>Created</span>
+                    <span>Actions</span>
+                  </div>
+                  {adminRecipes.map((r) => (
+                    <div key={r.id} className="admin-table-row">
+                      <div className="admin-cell">
+                        <strong>{r.title}</strong>
+                        <code className="small-text">{r.originalUrl}</code>
+                      </div>
+                      <div className="admin-cell">
+                        <span className="admin-user-email">{r.user?.email || "No user"}</span>
+                        {r.user?.name && <span className="small-text">{r.user.name}</span>}
+                      </div>
+                      <div className="admin-cell">
+                        {getLanguageFlag(r.language)} {r.language || "en"}
+                      </div>
+                      <div className="admin-cell">
+                        {new Date(r.createdAt).toLocaleDateString()}
+                      </div>
+                      <div className="admin-cell admin-actions">
+                        <button
+                          className="icon-button"
+                          onClick={() => handleViewSaved(r.id)}
+                          title="View recipe"
+                        >
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                          </svg>
+                        </button>
+                        <button
+                          className="icon-button icon-button-danger"
+                          onClick={() => handleDelete(r.id)}
+                          disabled={deletingId === r.id}
+                          title="Delete recipe"
+                        >
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
+                            <path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2" />
+                            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <p className="admin-count">{adminRecipes.length} total recipes</p>
             </section>
           )}
 
