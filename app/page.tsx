@@ -1509,70 +1509,65 @@ const handleConvert = async () => {
                       <p className="helper-text">No users found.</p>
                     </div>
                   ) : (
-                    <div className="admin-table">
-                      <div className="admin-table-header admin-table-users">
-                        <span>User</span>
-                        <span>Status</span>
-                        <span>Recipes</span>
-                        <span>Joined</span>
-                        <span>Actions</span>
-                      </div>
+                    <div className="admin-users-list">
                       {adminUsers.map((u) => (
-                        <div key={u.id} className={`admin-table-row admin-table-users ${u.blocked ? "admin-row-blocked" : ""}`}>
-                          <div className="admin-cell admin-user-cell">
-                            {u.image && (
+                        <div key={u.id} className={`admin-user-card ${u.blocked ? "blocked" : ""}`}>
+                          <div className="admin-user-card-header">
+                            {u.image ? (
                               <img src={u.image} alt="" className="admin-user-avatar" />
-                            )}
-                            <div>
-                              <strong>{u.name || "No name"}</strong>
-                              <span className="admin-user-email">{u.email || "No email"}</span>
-                            </div>
-                          </div>
-                          <div className="admin-cell">
-                            {u.blocked ? (
-                              <span className="status-badge status-blocked">
-                                🚫 Blocked
-                              </span>
                             ) : (
-                              <span className="status-badge status-active">
-                                ✓ Active
-                              </span>
+                              <div className="admin-user-avatar" style={{ background: 'var(--gray-200)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem' }}>
+                                👤
+                              </div>
+                            )}
+                            <div className="admin-user-info">
+                              <div className="admin-user-name">{u.name || "No name"}</div>
+                              <div className="admin-user-email">{u.email || "No email"}</div>
+                            </div>
+                            {u.blocked ? (
+                              <span className="status-badge status-blocked">🚫 Blocked</span>
+                            ) : u.email === ADMIN_EMAIL ? (
+                              <span className="admin-badge">👑 Admin</span>
+                            ) : (
+                              <span className="status-badge status-active">✓ Active</span>
                             )}
                           </div>
-                          <div className="admin-cell">
-                            {u.recipeCount} recipes
-                          </div>
-                          <div className="admin-cell">
-                            {new Date(u.createdAt).toLocaleDateString()}
-                          </div>
-                          <div className="admin-cell admin-actions">
-                            {u.email !== ADMIN_EMAIL && (
-                              <>
-                                <button
-                                  className={`btn-sm ${u.blocked ? "btn-success" : "btn-warning"}`}
-                                  onClick={() => handleBlockUser(u.id, !u.blocked)}
-                                  disabled={blockingUserId === u.id}
-                                  title={u.blocked ? "Unblock user" : "Block user"}
-                                >
-                                  {blockingUserId === u.id ? "..." : u.blocked ? "Unblock" : "Block"}
-                                </button>
-                                <button
-                                  className="icon-button icon-button-danger"
-                                  onClick={() => handleDeleteUser(u.id, u.email)}
-                                  disabled={blockingUserId === u.id}
-                                  title="Delete user and all data"
-                                >
-                                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
-                                    <path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2" />
-                                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                                  </svg>
-                                </button>
-                              </>
-                            )}
-                            {u.email === ADMIN_EMAIL && (
-                              <span className="admin-badge">Admin</span>
+                          
+                          <div className="admin-user-card-meta">
+                            <div className="admin-user-meta-item">
+                              <span className="admin-user-meta-label">Recipes</span>
+                              <span className="admin-user-meta-value">{u.recipeCount}</span>
+                            </div>
+                            <div className="admin-user-meta-item">
+                              <span className="admin-user-meta-label">Joined</span>
+                              <span className="admin-user-meta-value">{new Date(u.createdAt).toLocaleDateString()}</span>
+                            </div>
+                            {u.blocked && u.blockedAt && (
+                              <div className="admin-user-meta-item">
+                                <span className="admin-user-meta-label">Blocked</span>
+                                <span className="admin-user-meta-value">{new Date(u.blockedAt).toLocaleDateString()}</span>
+                              </div>
                             )}
                           </div>
+
+                          {u.email !== ADMIN_EMAIL && (
+                            <div className="admin-user-card-actions">
+                              <button
+                                className={`btn-sm ${u.blocked ? "btn-success" : "btn-warning"}`}
+                                onClick={() => handleBlockUser(u.id, !u.blocked)}
+                                disabled={blockingUserId === u.id}
+                              >
+                                {blockingUserId === u.id ? "..." : u.blocked ? "✓ Unblock User" : "🚫 Block User"}
+                              </button>
+                              <button
+                                className="btn-sm btn-danger"
+                                onClick={() => handleDeleteUser(u.id, u.email)}
+                                disabled={blockingUserId === u.id}
+                              >
+                                🗑️ Delete
+                              </button>
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
