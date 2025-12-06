@@ -22,6 +22,11 @@ model User {
   // Cookidoo integration
   cookidooToken     String?   @db.Text
   cookidooTokenExp  DateTime?
+  
+  // Admin controls
+  blocked       Boolean   @default(false)
+  blockedAt     DateTime?
+  blockedReason String?
 
   @@map("users")
 }

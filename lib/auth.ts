@@ -16,6 +16,21 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
+    async signIn({ user }) {
+      // Check if user is blocked
+      if (user.email) {
+        const dbUser = await prisma.user.findUnique({
+          where: { email: user.email },
+          select: { blocked: true },
+        });
+        
+        if (dbUser?.blocked) {
+          // Return false to deny sign-in
+          return false;
+        }
+      }
+      return true;
+    },
     async session({ session, token }) {
       if (session.user && token.sub) {
         session.user.id = token.sub;
@@ -31,6 +46,7 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: "/",
+    error: "/?error=blocked", // Redirect to home with error param if blocked
   },
 };
 

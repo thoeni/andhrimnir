@@ -223,6 +223,7 @@ export default function Home() {
   const isAdmin = session?.user?.email === ADMIN_EMAIL;
   
   // Admin state
+  const [adminTab, setAdminTab] = useState<"users" | "recipes">("users");
   const [adminRecipes, setAdminRecipes] = useState<Array<{
     id: string;
     title: string;
@@ -231,7 +232,19 @@ export default function Home() {
     language?: string;
     user?: { email: string; name: string };
   }>>([]);
+  const [adminUsers, setAdminUsers] = useState<Array<{
+    id: string;
+    name: string | null;
+    email: string | null;
+    image: string | null;
+    createdAt: string;
+    blocked: boolean;
+    blockedAt: string | null;
+    blockedReason: string | null;
+    recipeCount: number;
+  }>>([]);
   const [adminLoading, setAdminLoading] = useState(false);
+  const [blockingUserId, setBlockingUserId] = useState<string | null>(null);
 
 const SAMPLE_URL = "https://www.seriouseats.com/mushroom-risotto-recipe-5279129";
 
@@ -384,6 +397,70 @@ const handleConvert = async () => {
     }
   };
 
+  const fetchAdminUsers = async () => {
+    if (!isAdmin) return;
+    setAdminLoading(true);
+    try {
+      const response = await fetch("/api/admin/users");
+      if (!response.ok) {
+        throw new Error("Failed to load users");
+      }
+      const data = await response.json();
+      setAdminUsers(data.users || []);
+    } catch (err) {
+      console.error("Admin users fetch error:", err);
+    } finally {
+      setAdminLoading(false);
+    }
+  };
+
+  const handleBlockUser = async (userId: string, blocked: boolean) => {
+    if (!isAdmin) return;
+    setBlockingUserId(userId);
+    try {
+      const response = await fetch(`/api/admin/users/${userId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ blocked }),
+      });
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to update user");
+      }
+      // Refresh user list
+      await fetchAdminUsers();
+    } catch (err) {
+      console.error("Block user error:", err);
+      alert(err instanceof Error ? err.message : "Failed to update user");
+    } finally {
+      setBlockingUserId(null);
+    }
+  };
+
+  const handleDeleteUser = async (userId: string, userEmail: string | null) => {
+    if (!isAdmin) return;
+    if (!confirm(`Delete user ${userEmail || userId} and ALL their data? This cannot be undone.`)) {
+      return;
+    }
+    setBlockingUserId(userId);
+    try {
+      const response = await fetch(`/api/admin/users/${userId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to delete user");
+      }
+      // Refresh user list
+      await fetchAdminUsers();
+    } catch (err) {
+      console.error("Delete user error:", err);
+      alert(err instanceof Error ? err.message : "Failed to delete user");
+    } finally {
+      setBlockingUserId(null);
+    }
+  };
+
   const handleViewSaved = async (id: string) => {
     setViewingSavedId(id);
     setViewState("loading");
@@ -416,7 +493,11 @@ const handleConvert = async () => {
       fetchRecipes();
     }
     if (navTab === "admin" && isAdmin) {
-      fetchAdminRecipes();
+      if (adminTab === "users") {
+        fetchAdminUsers();
+      } else {
+        fetchAdminRecipes();
+      }
     }
     if (navTab === "settings" && isAuthenticated) {
       checkCookidooStatus();
@@ -1285,11 +1366,11 @@ const handleConvert = async () => {
               <div className="admin-header">
                 <div>
                   <h2>🔧 Admin Panel</h2>
-                  <p className="helper-text">View all recipes from all users</p>
+                  <p className="helper-text">Manage users and recipes</p>
                 </div>
                 <button
                   className="icon-button"
-                  onClick={fetchAdminRecipes}
+                  onClick={() => adminTab === "users" ? fetchAdminUsers() : fetchAdminRecipes()}
                   disabled={adminLoading}
                   title="Refresh"
                 >
@@ -1300,65 +1381,174 @@ const handleConvert = async () => {
                 </button>
               </div>
 
-              {adminLoading ? (
-                <div className="loading-state">Loading all recipes...</div>
-              ) : adminRecipes.length === 0 ? (
-                <div className="empty-state">
-                  <p className="helper-text">No recipes found across all users.</p>
-                </div>
-              ) : (
-                <div className="admin-table">
-                  <div className="admin-table-header">
-                    <span>Recipe</span>
-                    <span>User</span>
-                    <span>Language</span>
-                    <span>Created</span>
-                    <span>Actions</span>
-                  </div>
-                  {adminRecipes.map((r) => (
-                    <div key={r.id} className="admin-table-row">
-                      <div className="admin-cell">
-                        <strong>{r.title}</strong>
-                        <code className="small-text">{r.originalUrl}</code>
-                      </div>
-                      <div className="admin-cell">
-                        <span className="admin-user-email">{r.user?.email || "No user"}</span>
-                        {r.user?.name && <span className="small-text">{r.user.name}</span>}
-                      </div>
-                      <div className="admin-cell">
-                        {getLanguageFlag(r.language)} {r.language || "en"}
-                      </div>
-                      <div className="admin-cell">
-                        {new Date(r.createdAt).toLocaleDateString()}
-                      </div>
-                      <div className="admin-cell admin-actions">
-                        <button
-                          className="icon-button"
-                          onClick={() => handleViewSaved(r.id)}
-                          title="View recipe"
-                        >
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                            <circle cx="12" cy="12" r="3" />
-                          </svg>
-                        </button>
-                        <button
-                          className="icon-button icon-button-danger"
-                          onClick={() => handleDelete(r.id)}
-                          disabled={deletingId === r.id}
-                          title="Delete recipe"
-                        >
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
-                            <path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2" />
-                            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                          </svg>
-                        </button>
-                      </div>
+              {/* Admin Tabs */}
+              <div className="admin-tabs">
+                <button
+                  className={`admin-tab ${adminTab === "users" ? "active" : ""}`}
+                  onClick={() => {
+                    setAdminTab("users");
+                    if (adminUsers.length === 0) fetchAdminUsers();
+                  }}
+                >
+                  👥 Users ({adminUsers.length})
+                </button>
+                <button
+                  className={`admin-tab ${adminTab === "recipes" ? "active" : ""}`}
+                  onClick={() => {
+                    setAdminTab("recipes");
+                    if (adminRecipes.length === 0) fetchAdminRecipes();
+                  }}
+                >
+                  📖 Recipes ({adminRecipes.length})
+                </button>
+              </div>
+
+              {/* Users Tab */}
+              {adminTab === "users" && (
+                <>
+                  {adminLoading ? (
+                    <div className="loading-state">Loading users...</div>
+                  ) : adminUsers.length === 0 ? (
+                    <div className="empty-state">
+                      <p className="helper-text">No users found.</p>
                     </div>
-                  ))}
-                </div>
+                  ) : (
+                    <div className="admin-table">
+                      <div className="admin-table-header admin-table-users">
+                        <span>User</span>
+                        <span>Status</span>
+                        <span>Recipes</span>
+                        <span>Joined</span>
+                        <span>Actions</span>
+                      </div>
+                      {adminUsers.map((u) => (
+                        <div key={u.id} className={`admin-table-row admin-table-users ${u.blocked ? "admin-row-blocked" : ""}`}>
+                          <div className="admin-cell admin-user-cell">
+                            {u.image && (
+                              <img src={u.image} alt="" className="admin-user-avatar" />
+                            )}
+                            <div>
+                              <strong>{u.name || "No name"}</strong>
+                              <span className="admin-user-email">{u.email || "No email"}</span>
+                            </div>
+                          </div>
+                          <div className="admin-cell">
+                            {u.blocked ? (
+                              <span className="status-badge status-blocked">
+                                🚫 Blocked
+                              </span>
+                            ) : (
+                              <span className="status-badge status-active">
+                                ✓ Active
+                              </span>
+                            )}
+                          </div>
+                          <div className="admin-cell">
+                            {u.recipeCount} recipes
+                          </div>
+                          <div className="admin-cell">
+                            {new Date(u.createdAt).toLocaleDateString()}
+                          </div>
+                          <div className="admin-cell admin-actions">
+                            {u.email !== ADMIN_EMAIL && (
+                              <>
+                                <button
+                                  className={`btn-sm ${u.blocked ? "btn-success" : "btn-warning"}`}
+                                  onClick={() => handleBlockUser(u.id, !u.blocked)}
+                                  disabled={blockingUserId === u.id}
+                                  title={u.blocked ? "Unblock user" : "Block user"}
+                                >
+                                  {blockingUserId === u.id ? "..." : u.blocked ? "Unblock" : "Block"}
+                                </button>
+                                <button
+                                  className="icon-button icon-button-danger"
+                                  onClick={() => handleDeleteUser(u.id, u.email)}
+                                  disabled={blockingUserId === u.id}
+                                  title="Delete user and all data"
+                                >
+                                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
+                                    <path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2" />
+                                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                                  </svg>
+                                </button>
+                              </>
+                            )}
+                            {u.email === ADMIN_EMAIL && (
+                              <span className="admin-badge">Admin</span>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <p className="admin-count">{adminUsers.length} total users</p>
+                </>
               )}
-              <p className="admin-count">{adminRecipes.length} total recipes</p>
+
+              {/* Recipes Tab */}
+              {adminTab === "recipes" && (
+                <>
+                  {adminLoading ? (
+                    <div className="loading-state">Loading all recipes...</div>
+                  ) : adminRecipes.length === 0 ? (
+                    <div className="empty-state">
+                      <p className="helper-text">No recipes found across all users.</p>
+                    </div>
+                  ) : (
+                    <div className="admin-table">
+                      <div className="admin-table-header">
+                        <span>Recipe</span>
+                        <span>User</span>
+                        <span>Language</span>
+                        <span>Created</span>
+                        <span>Actions</span>
+                      </div>
+                      {adminRecipes.map((r) => (
+                        <div key={r.id} className="admin-table-row">
+                          <div className="admin-cell">
+                            <strong>{r.title}</strong>
+                            <code className="small-text">{r.originalUrl}</code>
+                          </div>
+                          <div className="admin-cell">
+                            <span className="admin-user-email">{r.user?.email || "No user"}</span>
+                            {r.user?.name && <span className="small-text">{r.user.name}</span>}
+                          </div>
+                          <div className="admin-cell">
+                            {getLanguageFlag(r.language)} {r.language || "en"}
+                          </div>
+                          <div className="admin-cell">
+                            {new Date(r.createdAt).toLocaleDateString()}
+                          </div>
+                          <div className="admin-cell admin-actions">
+                            <button
+                              className="icon-button"
+                              onClick={() => handleViewSaved(r.id)}
+                              title="View recipe"
+                            >
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                <circle cx="12" cy="12" r="3" />
+                              </svg>
+                            </button>
+                            <button
+                              className="icon-button icon-button-danger"
+                              onClick={() => handleDelete(r.id)}
+                              disabled={deletingId === r.id}
+                              title="Delete recipe"
+                            >
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
+                                <path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2" />
+                                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <p className="admin-count">{adminRecipes.length} total recipes</p>
+                </>
+              )}
             </section>
           )}
 
