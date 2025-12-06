@@ -362,6 +362,9 @@ export async function syncRecipeToCookidoo(
     // Sanitize instructions - remove any invalid annotations that would cause API errors
     if (Array.isArray(patchData.instructions)) {
       const validAnnotationTypes = ["INGREDIENT", "TTS", "MODE"];
+      // Valid MODE names that Cookidoo accepts
+      const validModeNames = ["dough", "turbo", "sous-vide", "slow_cooking", "fermentation", "keep_warm"];
+      
       patchData.instructions = (patchData.instructions as Array<Record<string, unknown>>).map((instruction, idx) => {
         if (!instruction.annotations || !Array.isArray(instruction.annotations)) {
           return instruction;
@@ -374,11 +377,27 @@ export async function syncRecipeToCookidoo(
             return false;
           }
           
-          // MODE must have a name
+          // MODE must have a valid name from the allowed list
           if (ann.type === "MODE") {
             const data = ann.data as Record<string, unknown> | undefined;
-            if (!data?.name) {
+            const modeName = (data?.name as string)?.toLowerCase();
+            
+            if (!modeName) {
               console.log(`[Cookidoo Sync] Removing MODE annotation without name from instruction ${idx}, annotation ${annIdx}`);
+              return false;
+            }
+            
+            if (!validModeNames.includes(modeName)) {
+              console.log(`[Cookidoo Sync] Removing MODE annotation with invalid name "${modeName}" from instruction ${idx}, annotation ${annIdx}`);
+              return false;
+            }
+          }
+          
+          // TTS must have at least time or speed
+          if (ann.type === "TTS") {
+            const data = ann.data as Record<string, unknown> | undefined;
+            if (!data?.time && !data?.speed) {
+              console.log(`[Cookidoo Sync] Removing TTS annotation without time/speed from instruction ${idx}, annotation ${annIdx}`);
               return false;
             }
           }
