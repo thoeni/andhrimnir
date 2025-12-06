@@ -340,7 +340,7 @@ export async function syncRecipeToCookidoo(
     }
 
     const createData = await createRes.json();
-    const recipeId = createData.id;
+    const recipeId = createData.recipeId || createData.id;
 
     if (!recipeId) {
       console.error("[Cookidoo Sync] No recipe ID in response:", createData);
