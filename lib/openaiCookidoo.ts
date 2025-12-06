@@ -33,6 +33,9 @@ interface Instruction {
  * ChatGPT often miscalculates character positions, so we search for the
  * annotated text in the step and correct the offset/length.
  */
+// Valid annotation types accepted by Cookidoo API
+const VALID_ANNOTATION_TYPES = ["INGREDIENT", "TTS", "MODE", "VOLUME"];
+
 function fixAnnotationOffsets(instructions: Instruction[]): Instruction[] {
   return instructions.map((instruction) => {
     if (!instruction.annotations || instruction.annotations.length === 0) {
@@ -40,7 +43,16 @@ function fixAnnotationOffsets(instructions: Instruction[]): Instruction[] {
     }
 
     const text = instruction.text;
-    const fixedAnnotations = instruction.annotations.map((annotation) => {
+    const fixedAnnotations = instruction.annotations
+      // First, filter out any annotations with invalid types
+      .filter((annotation) => {
+        if (!VALID_ANNOTATION_TYPES.includes(annotation.type)) {
+          console.log(`[Annotation Filter] Removing annotation with invalid type: ${annotation.type}`);
+          return false;
+        }
+        return true;
+      })
+      .map((annotation) => {
       // Convert TTS with "Varoma" temperature to MODE annotation
       // Cookidoo API rejects "Varoma" as a temperature value - it needs a MODE annotation instead
       if (annotation.type === "TTS" && annotation.data.temperature?.value?.toString().toLowerCase() === "varoma") {
@@ -53,6 +65,16 @@ function fixAnnotationOffsets(instructions: Instruction[]): Instruction[] {
             ...(annotation.data.time ? { time: annotation.data.time } : {}),
           }
         } as Annotation;
+      }
+      
+      // Fix TTS annotations that might be missing required fields or have invalid data
+      if (annotation.type === "TTS") {
+        const ttsData = annotation.data;
+        // If TTS has no time and no speed, it's probably invalid
+        if (!ttsData.time && !ttsData.speed) {
+          console.log(`[TTS Fix] TTS annotation missing both time and speed - marking for removal`);
+          return null; // Will be filtered out
+        }
       }
 
       // Fix TTS annotations - find the actual time/temp/speed pattern in the text
@@ -107,6 +129,31 @@ function fixAnnotationOffsets(instructions: Instruction[]): Instruction[] {
       // MODE annotations should only have: name (required), time (optional)
       if (annotation.type === "MODE") {
         const modeData = annotation.data as { name?: string; time?: number; speed?: string };
+        
+        // MODE name must be one of the valid modes
+        const validModes = ["dough", "varoma", "turbo", "leftover", "fermentation", "slow_cook", "keep_warm"];
+        let modeName = modeData.name?.toLowerCase() || "";
+        
+        // Try to infer the mode from the step text if name is missing or invalid
+        if (!modeName || !validModes.includes(modeName)) {
+          const stepTextLower = text.toLowerCase();
+          if (stepTextLower.includes("dough") || stepTextLower.includes("knead")) {
+            modeName = "dough";
+          } else if (stepTextLower.includes("varoma")) {
+            modeName = "varoma";
+          } else if (stepTextLower.includes("turbo")) {
+            modeName = "turbo";
+          } else if (stepTextLower.includes("slow cook")) {
+            modeName = "slow_cook";
+          } else if (stepTextLower.includes("ferment")) {
+            modeName = "fermentation";
+          } else {
+            // Default to dough if we can't infer
+            modeName = "dough";
+          }
+          console.log(`[MODE Fix] Setting mode name to "${modeName}" (was: "${modeData.name || 'undefined'}")`);
+        }
+        
         if (modeData.speed) {
           console.log(`[MODE Fix] Removing invalid 'speed' field from MODE annotation`);
         }
@@ -114,7 +161,7 @@ function fixAnnotationOffsets(instructions: Instruction[]): Instruction[] {
           type: "MODE",
           position: annotation.position,
           data: {
-            name: modeData.name || "dough",
+            name: modeName,
             ...(modeData.time ? { time: modeData.time } : {}),
           }
         } as Annotation;
@@ -200,7 +247,9 @@ function fixAnnotationOffsets(instructions: Instruction[]): Instruction[] {
       }
       
       return annotation;
-    });
+    })
+    // Filter out any null annotations (from invalid TTS annotations)
+    .filter((annotation): annotation is Annotation => annotation !== null);
 
     return {
       ...instruction,
