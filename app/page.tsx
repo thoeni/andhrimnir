@@ -108,6 +108,9 @@ interface StoredRecipeDetail {
   createdAt: string;
   share?: { slug: string };
   cookidooJson: CookidooRecipe;
+  cookidooId?: string | null;
+  cookidooUrl?: string | null;
+  syncedAt?: string | null;
 }
 
 // Helper to check if an INGREDIENT annotation has a VOLUME annotation
@@ -221,6 +224,7 @@ export default function Home() {
   // Cookidoo sync state
   const [syncingToCookidoo, setSyncingToCookidoo] = useState(false);
   const [cookidooRecipeUrl, setCookidooRecipeUrl] = useState<string | null>(null);
+  const [isRecipeSynced, setIsRecipeSynced] = useState(false);
   
   const isAuthenticated = status === "authenticated";
   const isLoading = status === "loading";
@@ -261,6 +265,8 @@ const handleNewImport = () => {
   setSaveMessage("");
   setSavedRecipeId(null);
   setShareSlug(null);
+  setIsRecipeSynced(false);
+  setCookidooRecipeUrl(null);
 };
 
 const handleConvert = async () => {
@@ -481,9 +487,12 @@ const handleConvert = async () => {
       setLastOriginalUrl(saved.originalUrl);
       setSavedRecipeId(saved.id);
       setShareSlug(saved.share?.slug ?? null);
+      // Set sync status
+      setIsRecipeSynced(!!saved.cookidooId);
+      setCookidooRecipeUrl(saved.cookidooUrl || null);
       setViewState("result");
       setNavTab("import");
-      setSaveMessage("Loaded from saved recipe");
+      setSaveMessage(saved.cookidooId ? "Loaded synced recipe" : "Loaded from saved recipe");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load recipe");
       setViewState("error");
@@ -692,7 +701,11 @@ const handleConvert = async () => {
       }
 
       setCookidooRecipeUrl(data.recipeUrl);
+      setIsRecipeSynced(true);
       setSaveMessage("✓ Recipe synced to Cookidoo!");
+      
+      // Refresh the recipe list to show updated status
+      fetchRecipes();
       
       // Open the recipe in a new tab
       if (data.recipeUrl) {
@@ -1042,44 +1055,55 @@ const handleConvert = async () => {
                           </>
                         )}
                       </button>
-                      <button
-                        onClick={handleSendToCookidoo}
-                        className={`btn-secondary ${!cookidooConnected ? 'btn-disabled' : ''}`}
-                        disabled={syncingToCookidoo || !cookidooConnected}
-                        title={
-                          !cookidooConnected 
-                            ? "Connect Cookidoo account in Settings first" 
-                            : cookidooRecipeUrl 
-                            ? "Recipe synced! Click to sync again" 
-                            : "Sync recipe to your Cookidoo account"
-                        }
-                      >
-                        {syncingToCookidoo ? (
-                          <>
-                            <svg className="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                              <circle cx="12" cy="12" r="10" opacity="0.25" />
-                              <path d="M12 2a10 10 0 0 1 10 10" />
-                            </svg>
-                            Syncing...
-                          </>
-                        ) : cookidooRecipeUrl ? (
-                          <>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                              <path d="M20 6L9 17l-5-5" />
-                            </svg>
-                            Synced to Cookidoo
-                          </>
-                        ) : (
-                          <>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                              <path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7" />
-                              <path d="M16 6l-4-4-4 4" />
-                              <path d="M12 2v14" />
-                            </svg>
-                            {cookidooConnected ? "Send to Cookidoo" : "Connect Cookidoo"}
-                          </>
-                        )}
-                      </button>
+                      {isRecipeSynced && cookidooRecipeUrl ? (
+                        <a
+                          href={cookidooRecipeUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn-secondary btn-synced"
+                          title="View recipe on Cookidoo"
+                        >
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M20 6L9 17l-5-5" />
+                          </svg>
+                          View on Cookidoo
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: 14, height: 14 }}>
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                            <polyline points="15 3 21 3 21 9" />
+                            <line x1="10" y1="14" x2="21" y2="3" />
+                          </svg>
+                        </a>
+                      ) : (
+                        <button
+                          onClick={handleSendToCookidoo}
+                          className={`btn-secondary ${!cookidooConnected ? 'btn-disabled' : ''}`}
+                          disabled={syncingToCookidoo || !cookidooConnected}
+                          title={
+                            !cookidooConnected 
+                              ? "Connect Cookidoo account in Settings first" 
+                              : "Sync recipe to your Cookidoo account"
+                          }
+                        >
+                          {syncingToCookidoo ? (
+                            <>
+                              <svg className="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <circle cx="12" cy="12" r="10" opacity="0.25" />
+                                <path d="M12 2a10 10 0 0 1 10 10" />
+                              </svg>
+                              Syncing...
+                            </>
+                          ) : (
+                            <>
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7" />
+                                <path d="M16 6l-4-4-4 4" />
+                                <path d="M12 2v14" />
+                              </svg>
+                              {cookidooConnected ? "Send to Cookidoo" : "Connect Cookidoo"}
+                            </>
+                          )}
+                        </button>
+                      )}
                       <button onClick={resetToInput} className="btn-ghost">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <path d="M12 5v14M5 12h14" />

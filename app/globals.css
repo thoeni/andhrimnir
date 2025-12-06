@@ -690,6 +690,18 @@ html, body {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
+  text-decoration: none;
+}
+
+.btn-synced {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #bbf7d0;
+}
+
+.btn-synced:hover {
+  background: #bbf7d0;
+  border-color: #86efac;
 }
 
 .btn-secondary svg {
