@@ -1,0 +1,732 @@
+  curl 'https://cookidoo.co.uk/created-recipes/en-GB/01KBT39MK9MZ915HYKHTBNBVVB' \
+  -X 'PATCH' \
+  -H 'accept: application/json' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'content-type: application/json' \
+  -b 'tmde-lang=en-GB; OptanonAlertBoxClosed=2025-12-06T14:00:44.610Z; v-is-authenticated=true; _oauth2_proxy=djIuWDI5aGRYUm9NbDl3Y205NGVTMWlPVFU0WkRBMk5UVmtaRGN6TjJSbFpUSmlPVEpsWTJSak5URXhNakEyTXcuTjR3OUpvQnl5T0hHTUdiY2c3UGJYUQ==|1765035006|qDU40xiPBm1FvUv2vlRLYmXqOvwqeDFAk7GxqmB1cYw=; v-authenticated=qDU40xiPBm1FvUv2vlRLYmXqOvwqeDFAk7GxqmB1cYw=; OptanonConsent=isGpcEnabled=0&datestamp=Sat+Dec+06+2025+15%3A58%3A00+GMT%2B0000+(Greenwich+Mean+Time)&version=202501.1.0&browserGpcFlag=0&isIABGlobal=false&hosts=&landingPath=NotLandingPage&groups=C0002%3A0%2CC0001%3A1%2CC0003%3A0%2CC0004%3A0&geolocation=FR%3BIDF&AwaitingReconsent=false' \
+  -H 'origin: https://cookidoo.co.uk' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://cookidoo.co.uk/created-recipes/en-GB/01KBT39MK9MZ915HYKHTBNBVVB/edit/ingredients-and-preparation-steps?active=steps' \
+  -H 'sec-ch-ua: "Google Chrome";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'x-requested-with: xmlhttprequest' \
+  --data-raw $'{"name":"Torta Pasqualina","hints":"Ensure dough is rolled thinly for best results. Use a sharp knife to cut slits in the dough to prevent puffing during baking.","tools":["TM7","TM6","TM5"],"yield":{"value":0,"unitText":"portion"},"prepTime":0,"totalTime":0,"ingredients":[{"text":"600 g all-purpose flour","type":"INGREDIENT"},{"text":"350 g water","type":"INGREDIENT"},{"text":"35 g extra virgin olive oil","type":"INGREDIENT"},{"text":"1 pinch fine salt","type":"INGREDIENT"},{"text":"1.5 kg Swiss chard (to clean)","type":"INGREDIENT"},{"text":"1 onion","type":"INGREDIENT"},{"text":"2 medium eggs","type":"INGREDIENT"},{"text":"50 g Parmigiano Reggiano DOP (to grate)","type":"INGREDIENT"},{"text":"3 sprigs marjoram","type":"INGREDIENT"},{"text":"Extra virgin olive oil to taste","type":"INGREDIENT"},{"text":"Fine salt to taste","type":"INGREDIENT"},{"text":"Black pepper to taste","type":"INGREDIENT"},{"text":"500 g cows milk ricotta","type":"INGREDIENT"},{"text":"90 g Parmigiano Reggiano DOP (to grate)","type":"INGREDIENT"},{"text":"3 medium eggs","type":"INGREDIENT"},{"text":"Nutmeg to taste","type":"INGREDIENT"},{"text":"Fine salt to taste","type":"INGREDIENT"},{"text":"All-purpose flour to taste","type":"INGREDIENT"},{"text":"Extra virgin olive oil to taste","type":"INGREDIENT"},{"text":"7 medium eggs","type":"INGREDIENT"},{"text":"30 g Parmigiano Reggiano DOP (to grate)","type":"INGREDIENT"}],"instructions":[{"text":"Add flour, a pinch of salt, and water to the mixing bowl.","type":"STEP","annotations":[{"data":{"description":{"text":"600 g all-purpose flour","annotations":[{"data":{"unit":"g","amount":600,"unitText":"g"},"type":"VOLUME","position":{"length":6,"offset":0}}]}},"type":"INGREDIENT","position":{"length":5,"offset":4}},{"data":{"description":{"text":"1 pinch fine salt","annotations":[]}},"type":"INGREDIENT","position":{"length":5,"offset":13}},{"data":{"description":{"text":"350 g water","annotations":[{"data":{"unit":"g","amount":350,"unitText":"g"},"type":"VOLUME","position":{"length":6,"offset":0}}]}},"type":"INGREDIENT","position":{"length":5,"offset":32}}]},{"text":"Knead: 2 min./dough mode.","type":"STEP","annotations":[{"data":{"name":"dough","time":120,"speed":"dough"},"type":"MODE","position":{"length":17,"offset":7}}]},{"text":"Add extra virgin olive oil.","type":"STEP","annotations":[{"data":{"description":{"text":"35 g extra virgin olive oil","annotations":[{"data":{"unit":"g","amount":35,"unitText":"g"},"type":"VOLUME","position":{"length":6,"offset":0}}]}},"type":"INGREDIENT","position":{"length":22,"offset":4}}]},{"text":"Knead: 1 min./dough mode.","type":"STEP","annotations":[{"data":{"name":"dough","time":60,"speed":"dough"},"type":"MODE","position":{"length":17,"offset":7}}]},{"text":"Divide dough into 18 pieces, one 100 g for base, others 50 g each.","type":"STEP","annotations":[]},{"text":"Cover and let rest at room temperature.","type":"STEP","annotations":[]},{"text":"Add onion to mixing bowl.","type":"STEP","annotations":[{"data":{"description":{"text":"1 onion","annotations":[]}},"type":"INGREDIENT","position":{"length":5,"offset":4}}]},{"text":"Chop: 5 sec./vel. 5.","type":"STEP","annotations":[{"data":{"time":5,"speed":"5"},"type":"TTS","position":{"length":13,"offset":6}}]},{"text":"Add Swiss chard leaves.","type":"STEP","annotations":[{"data":{"description":{"text":"1.5 kg Swiss chard (to clean)","annotations":[{"data":{"unit":"g","amount":1500,"unitText":"g"},"type":"VOLUME","position":{"length":7,"offset":0}}]}},"type":"INGREDIENT","position":{"length":11,"offset":4}}]},{"text":"Sauté: 5 min./120°C//vel. 1.","type":"STEP","annotations":[{"data":{"time":300,"speed":"1","direction":"CCW","temperature":{"unit":"C","value":"120"}},"type":"TTS","position":{"length":12,"offset":7}}]},{"text":"Drain excess liquid from Swiss chard.","type":"STEP","annotations":[]},{"text":"Add eggs, grated Parmigiano Reggiano, marjoram, salt, and pepper to Swiss chard.","type":"STEP","annotations":[{"data":{"description":{"text":"2 medium eggs","annotations":[]}},"type":"INGREDIENT","position":{"length":4,"offset":4}},{"data":{"description":{"text":"50 g Parmigiano Reggiano DOP (to grate)","annotations":[{"data":{"unit":"g","amount":50,"unitText":"g"},"type":"VOLUME","position":{"length":6,"offset":0}}]}},"type":"INGREDIENT","position":{"length":19,"offset":17}},{"data":{"description":{"text":"3 sprigs marjoram","annotations":[]}},"type":"INGREDIENT","position":{"length":8,"offset":38}},{"data":{"description":{"text":"Fine salt to taste","annotations":[]}},"type":"INGREDIENT","position":{"length":4,"offset":48}},{"data":{"description":{"text":"Black pepper to taste","annotations":[]}},"type":"INGREDIENT","position":{"length":9,"offset":58}}]},{"text":"Mix: 30 sec./vel. 3.","type":"STEP","annotations":[{"data":{"time":30,"speed":"3"},"type":"TTS","position":{"length":14,"offset":5}}]},{"text":"Add ricotta to mixing bowl.","type":"STEP","annotations":[{"data":{"description":{"text":"500 g cows milk ricotta","annotations":[{"data":{"unit":"g","amount":500,"unitText":"g"},"type":"VOLUME","position":{"length":6,"offset":0}}]}},"type":"INGREDIENT","position":{"length":7,"offset":4}}]},{"text":"Mix: 20 sec./vel. 4.","type":"STEP","annotations":[{"data":{"time":20,"speed":"4"},"type":"TTS","position":{"length":14,"offset":5}}]},{"text":"Add eggs and grated Parmigiano Reggiano.","type":"STEP","annotations":[{"data":{"description":{"text":"3 medium eggs","annotations":[]}},"type":"INGREDIENT","position":{"length":4,"offset":4}},{"data":{"description":{"text":"90 g Parmigiano Reggiano DOP (to grate)","annotations":[{"data":{"unit":"g","amount":90,"unitText":"g"},"type":"VOLUME","position":{"length":6,"offset":0}}]}},"type":"INGREDIENT","position":{"length":19,"offset":20}}]},{"text":"Mix: 30 sec./vel. 4.","type":"STEP","annotations":[{"data":{"time":30,"speed":"4"},"type":"TTS","position":{"length":14,"offset":5}}]},{"text":"Add nutmeg and salt to taste.","type":"STEP","annotations":[{"data":{"description":{"text":"Nutmeg to taste","annotations":[]}},"type":"INGREDIENT","position":{"length":8,"offset":20}},{"data":{"description":{"text":"Fine salt to taste","annotations":[]}},"type":"INGREDIENT","position":{"length":13,"offset":15}}]},{"text":"Mix: 20 sec./vel. 3.","type":"STEP","annotations":[{"data":{"time":20,"speed":"3"},"type":"TTS","position":{"length":14,"offset":5}}]},{"text":"Roll out 100 g dough ball to 40 cm diameter.","type":"STEP","annotations":[]},{"text":"Place dough in 28 cm springform pan, brush with oil.","type":"STEP","annotations":[]},{"text":"Repeat with smaller dough balls, brushing each layer with oil.","type":"STEP","annotations":[]},{"text":"Add Swiss chard mixture, then ricotta mixture, to dough base.","type":"STEP","annotations":[]},{"text":"Make 7 wells in ricotta mixture, add eggs to each.","type":"STEP","annotations":[{"data":{"description":{"text":"7 medium eggs","annotations":[]}},"type":"INGREDIENT","position":{"length":4,"offset":37}}]},{"text":"Sprinkle with grated Parmigiano Reggiano.","type":"STEP","annotations":[{"data":{"description":{"text":"30 g Parmigiano Reggiano DOP (to grate)","annotations":[{"data":{"unit":"g","amount":30,"unitText":"g"},"type":"VOLUME","position":{"length":6,"offset":0}}]}},"type":"INGREDIENT","position":{"length":19,"offset":21}}]},{"text":"Cover with remaining dough layers, brush each with oil.","type":"STEP","annotations":[]},{"text":"Trim excess dough, roll edges to seal.","type":"STEP","annotations":[]},{"text":"Cut slits in top to release steam.","type":"STEP","annotations":[]},{"text":"Bake: 80-90 min./180°C.","type":"STEP","annotations":[{"data":{"time":5400,"temperature":{"unit":"C","value":"180"}},"type":"TTS","position":{"length":13,"offset":9}}]},{"text":"Cool before serving.","type":"STEP","annotations":[]}],"original_url":"https://ricette.giallozafferano.it/Torta-Pasqualina.html"}'
+
+
+{
+    "instructions": [
+        {
+            "type": "STEP",
+            "text": "Prepare 300 g of coffee with the moka, sweeten to taste, and let it cool in a wide, shallow bowl. Separate the eggs, dividing the whites from the yolks. Ensure no yolk traces remain in the whites. Beat the yolks with half of the sugar until light and frothy. Gradually add the mascarpone while mixing.",
+            "annotations": [
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "300 g Coffee"
+                    },
+                    "position": {
+                        "offset": 8,
+                        "length": 13
+                    }
+                },
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "260 g Fresh eggs"
+                    },
+                    "position": {
+                        "offset": 117,
+                        "length": 17
+                    }
+                },
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "120 g Sugar"
+                    },
+                    "position": {
+                        "offset": 207,
+                        "length": 12
+                    }
+                },
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "750 g Mascarpone"
+                    },
+                    "position": {
+                        "offset": 256,
+                        "length": 17
+                    }
+                }
+            ]
+        },
+        {
+            "type": "STEP",
+            "text": "Once all the mascarpone is incorporated, you will have a thick and compact cream. Set aside. Clean the beaters well and beat 3 min/speed 7 the 260 g Fresh eggs (about 5 medium) egg whites. When foamy, gradually add the remaining sugar.",
+            "annotations": [
+                {
+                    "type": "TTS",
+                    "data": {
+                        "speed": "7",
+                        "time": 180
+                    },
+                    "position": {
+                        "offset": 125,
+                        "length": 13
+                    }
+                },
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "260 g Fresh eggs (about 5 medium)"
+                    },
+                    "position": {
+                        "offset": 143,
+                        "length": 33
+                    }
+                }
+            ]
+        },
+        {
+            "type": "STEP",
+            "text": "Beat the egg whites until stiff peaks form. Add a spoonful of egg whites to the mascarpone cream and mix vigorously with a spatula. Then, gently fold in the remaining egg whites, little by little, using an upward motion."
+        },
+        {
+            "type": "STEP",
+            "text": "The mascarpone cream is now ready. Spread a generous spoonful on the bottom of a 30x19.5 cm glass dish. Dip the savoiardi briefly in the cold coffee, first on one side, then the other.",
+            "annotations": [
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "250 g Savoiardi"
+                    },
+                    "position": {
+                        "offset": 160,
+                        "length": 15
+                    }
+                }
+            ]
+        },
+        {
+            "type": "STEP",
+            "text": "Arrange the soaked savoiardi in the dish, aligning them in one direction to form the first layer. Add more mascarpone cream and spread evenly to cover."
+        },
+        {
+            "type": "STEP",
+            "text": "Continue layering the soaked savoiardi, then add another layer of cream and smooth the surface."
+        },
+        {
+            "type": "STEP",
+            "text": "Transfer the remaining cream into a piping bag with a 12 mm plain nozzle and pipe dollops over the entire dish. Dust with cocoa powder and refrigerate for a couple of hours. Your tiramisù is ready to enjoy!",
+            "annotations": [
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "Cocoa powder"
+                    },
+                    "position": {
+                        "offset": 122,
+                        "length": 12
+                    }
+                }
+            ]
+        }
+    ]
+}
+
+
+{
+    "tags": [
+        "Dessert",
+        "Italian",
+        "Coffee",
+        "Mascarpone"
+    ],
+    "notes": "Ensure all ingredients are fresh, especially the eggs, for the best flavor and texture.",
+    "steps": [
+        {
+            "tip": "Ensure no yolk traces are in the whites for proper whipping.",
+            "number": 1,
+            "thermomix": null,
+            "instruction": "Prepare the coffee using a moka pot to obtain 300 g, sweeten to taste, and let it cool in a shallow, wide bowl. Separate the eggs, dividing the whites from the yolks."
+        },
+        {
+            "tip": "Add mascarpone slowly to maintain a smooth texture.",
+            "number": 2,
+            "thermomix": {
+                "mode": "normal",
+                "speed": 4,
+                "accessory": null,
+                "temperature": null,
+                "time_seconds": 120
+            },
+            "instruction": "Whip the yolks with half the sugar using an electric mixer until pale and frothy. Gradually add mascarpone while mixing."
+        },
+        {
+            "tip": "The mixture is ready when it doesnt move when the bowl is inverted.",
+            "number": 3,
+            "thermomix": {
+                "mode": "normal",
+                "speed": 4,
+                "accessory": "butterfly",
+                "temperature": null,
+                "time_seconds": 180
+            },
+            "instruction": "Clean the mixer thoroughly and whip the egg whites. Once foamy, gradually add the remaining sugar until stiff peaks form."
+        },
+        {
+            "tip": "Fold gently to maintain the airiness of the mixture.",
+            "number": 4,
+            "thermomix": {
+                "mode": "reverse",
+                "speed": "soft-stir",
+                "accessory": null,
+                "temperature": null,
+                "time_seconds": 60
+            },
+            "instruction": "Fold a spoonful of egg whites into the mascarpone cream to lighten it, then gently fold in the remaining whites."
+        },
+        {
+            "tip": "Ensure ladyfingers are not too soggy.",
+            "number": 5,
+            "thermomix": null,
+            "instruction": "Spread a generous spoonful of mascarpone cream on the bottom of a 30x19.5 cm glass dish. Dip the ladyfingers briefly in the cooled coffee on both sides."
+        },
+        {
+            "tip": "Align ladyfingers in the same direction for a neat layer.",
+            "number": 6,
+            "thermomix": null,
+            "instruction": "Arrange the soaked ladyfingers in the dish to form the first layer. Cover with more mascarpone cream and level it."
+        },
+        {
+            "tip": "Ensure even distribution of cream.",
+            "number": 7,
+            "thermomix": null,
+            "instruction": "Continue layering with soaked ladyfingers and mascarpone cream, leveling the top layer."
+        },
+        {
+            "tip": "Chilling helps the flavors meld and the dessert set.",
+            "number": 8,
+            "thermomix": null,
+            "instruction": "Transfer remaining cream into a piping bag with a 12 mm plain nozzle and pipe dollops over the entire surface. Dust with cocoa powder and refrigerate for a couple of hours."
+        }
+    ],
+    "title": "Tiramisù",
+    "servings": "Not specified",
+    "prep_time": "Not specified",
+    "difficulty": "medium",
+    "total_time": "Not specified",
+    "description": "The classic tiramisù is the most beloved Italian dessert in the world: an easy version with mascarpone cream and ladyfingers soaked in coffee.",
+    "ingredients": [
+        {
+            "group": null,
+            "items": [
+                {
+                    "name": "Mascarpone",
+                    "unit": "g",
+                    "quantity": "750",
+                    "preparation": null
+                },
+                {
+                    "name": "Fresh eggs",
+                    "unit": "g",
+                    "quantity": "260",
+                    "preparation": "about 5 medium"
+                },
+                {
+                    "name": "Ladyfingers",
+                    "unit": "g",
+                    "quantity": "250",
+                    "preparation": null
+                },
+                {
+                    "name": "Sugar",
+                    "unit": "g",
+                    "quantity": "120",
+                    "preparation": null
+                },
+                {
+                    "name": "Coffee",
+                    "unit": "g",
+                    "quantity": "300",
+                    "preparation": "from moka, sweetened to taste"
+                },
+                {
+                    "name": "Unsweetened cocoa powder",
+                    "unit": "",
+                    "quantity": "to taste",
+                    "preparation": null
+                }
+            ]
+        }
+    ],
+    "original_url": "https://ricette.giallozafferano.it/Tiramisu.html",
+    "import_payload": {
+        "steps": [
+            {
+                "text": "Prepare the coffee using a moka pot to obtain 300 g, sweeten to taste, and let it cool in a shallow, wide bowl. Separate the eggs, dividing the whites from the yolks.",
+                "type": "STEP"
+            },
+            {
+                "text": "Whip the yolks with half the sugar using an electric mixer until pale and frothy. Gradually add mascarpone while mixing.",
+                "type": "STEP"
+            },
+            {
+                "text": "Clean the mixer thoroughly and whip the egg whites. Once foamy, gradually add the remaining sugar until stiff peaks form.",
+                "type": "STEP"
+            },
+            {
+                "text": "Fold a spoonful of egg whites into the mascarpone cream to lighten it, then gently fold in the remaining whites.",
+                "type": "STEP"
+            },
+            {
+                "text": "Spread a generous spoonful of mascarpone cream on the bottom of a 30x19.5 cm glass dish. Dip the ladyfingers briefly in the cooled coffee on both sides.",
+                "type": "STEP"
+            },
+            {
+                "text": "Arrange the soaked ladyfingers in the dish to form the first layer. Cover with more mascarpone cream and level it.",
+                "type": "STEP"
+            },
+            {
+                "text": "Continue layering with soaked ladyfingers and mascarpone cream, leveling the top layer.",
+                "type": "STEP"
+            },
+            {
+                "text": "Transfer remaining cream into a piping bag with a 12 mm plain nozzle and pipe dollops over the entire surface. Dust with cocoa powder and refrigerate for a couple of hours.",
+                "type": "STEP"
+            }
+        ],
+        "ingredients": [
+            {
+                "text": "750 g Mascarpone",
+                "type": "INGREDIENT"
+            },
+            {
+                "text": "260 g Fresh eggs (about 5 medium)",
+                "type": "INGREDIENT"
+            },
+            {
+                "text": "250 g Ladyfingers",
+                "type": "INGREDIENT"
+            },
+            {
+                "text": "120 g Sugar",
+                "type": "INGREDIENT"
+            },
+            {
+                "text": "300 g Coffee (from moka, sweetened to taste)",
+                "type": "INGREDIENT"
+            },
+            {
+                "text": "Unsweetened cocoa powder to taste",
+                "type": "INGREDIENT"
+            }
+        ]
+    }
+}
+
+
+{
+    "instructions": [
+        {
+            "type": "STEP",
+            "text": "Prepare 300 g of coffee with the moka, sweeten to taste, and let it cool in a wide, shallow bowl. Separate the eggs, dividing the whites from the yolks. Ensure no yolk traces remain in the whites. Beat the yolks with half of the sugar until light and frothy. Gradually add the mascarpone while mixing.",
+            "annotations": [
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "300 g Coffee"
+                    },
+                    "position": {
+                        "offset": 8,
+                        "length": 13
+                    }
+                },
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "260 g Fresh eggs"
+                    },
+                    "position": {
+                        "offset": 117,
+                        "length": 17
+                    }
+                },
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "120 g Sugar"
+                    },
+                    "position": {
+                        "offset": 207,
+                        "length": 12
+                    }
+                },
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "750 g Mascarpone"
+                    },
+                    "position": {
+                        "offset": 256,
+                        "length": 17
+                    }
+                }
+            ]
+        },
+        {
+            "type": "STEP",
+            "text": "Once all the mascarpone is incorporated, you will have a thick and compact cream. Set aside. Clean the beaters well and beat 3 min/speed 7 the 260 g Fresh eggs (about 5 medium) egg whites. When foamy, gradually add the remaining sugar.",
+            "annotations": [
+                {
+                    "type": "TTS",
+                    "data": {
+                        "speed": "7",
+                        "time": 180
+                    },
+                    "position": {
+                        "offset": 125,
+                        "length": 13
+                    }
+                },
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "260 g Fresh eggs (about 5 medium)"
+                    },
+                    "position": {
+                        "offset": 143,
+                        "length": 33
+                    }
+                }
+            ]
+        },
+        {
+            "type": "STEP",
+            "text": "Beat the egg whites until stiff peaks form. Add a spoonful of egg whites to the mascarpone cream and mix vigorously with a spatula. Then, gently fold in the remaining egg whites, little by little, using an upward motion."
+        },
+        {
+            "type": "STEP",
+            "text": "The mascarpone cream is now ready. Spread a generous spoonful on the bottom of a 30x19.5 cm glass dish. Dip the savoiardi briefly in the cold coffee, first on one side, then the other.",
+            "annotations": [
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "250 g Savoiardi"
+                    },
+                    "position": {
+                        "offset": 160,
+                        "length": 15
+                    }
+                }
+            ]
+        },
+        {
+            "type": "STEP",
+            "text": "Arrange the soaked savoiardi in the dish, aligning them in one direction to form the first layer. Add more mascarpone cream and spread evenly to cover."
+        },
+        {
+            "type": "STEP",
+            "text": "Continue layering the soaked savoiardi, then add another layer of cream and smooth the surface."
+        },
+        {
+            "type": "STEP",
+            "text": "Transfer the remaining cream into a piping bag with a 12 mm plain nozzle and pipe dollops over the entire dish. Dust with cocoa powder and refrigerate for a couple of hours. Your tiramisù is ready to enjoy!",
+            "annotations": [
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "Cocoa powder"
+                    },
+                    "position": {
+                        "offset": 122,
+                        "length": 12
+                    }
+                }
+            ]
+        }
+    ]
+}
+
+{
+    {
+        "ingredients": [
+            {
+                "type": "INGREDIENT",
+                "text": "50 g di carota, pelata e a pezzi (2-4 cm)"
+            },
+            {
+                "type": "INGREDIENT",
+                "text": "50 g di cipolla in quarti"
+            },
+            {
+                "type": "INGREDIENT",
+                "text": "50 g di gambo di sedano a pezzi (2-3 cm)"
+            },
+            {
+                "type": "INGREDIENT",
+                "text": "1 spicchio di aglio senz'anima"
+            },
+            {
+                "type": "INGREDIENT",
+                "text": "80 g di olio extravergine di oliva"
+            },
+            {
+                "type": "INGREDIENT",
+                "text": "20 g di concentrato di pomodoro"
+            },
+            {
+                "type": "INGREDIENT",
+                "text": "200 g di vino rosso"
+            },
+            {
+                "type": "INGREDIENT",
+                "text": "200 g di lenticchie secche, ammollate (se indicato sulla confezione)"
+            },
+            {
+                "type": "INGREDIENT",
+                "text": "1 foglia di alloro fresca o secca"
+            },
+            {
+                "type": "INGREDIENT",
+                "text": "700 g di passata di pomodoro"
+            },
+            {
+                "type": "INGREDIENT",
+                "text": "400 g di acqua"
+            },
+            {
+                "type": "INGREDIENT",
+                "text": "2 cucchiaini di sale"
+            },
+            {
+                "type": "INGREDIENT",
+                "text": "1 pizzico di zucchero"
+            }
+        ]
+    }
+    "instructions": [
+        {
+            "type": "STEP",
+            "text": "Mettere nel boccale la carota, la cipolla, il sedano e l'aglio, tritare: 10 sec./vel. 5. Riunire sul fondo con la spatola",
+            "annotations": [
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "50 g di carota, pelata e a pezzi (2-3 cm)"
+                    },
+                    "position": {
+                        "offset": 23,
+                        "length": 6
+                    }
+                },
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "50 g di cipolla in quarti"
+                    },
+                    "position": {
+                        "offset": 34,
+                        "length": 7
+                    }
+                },
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "50 g di gambo di sedano a pezzi (2-3 cm)"
+                    },
+                    "position": {
+                        "offset": 46,
+                        "length": 6
+                    }
+                },
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "1 spicchio di aglio senz'anima"
+                    },
+                    "position": {
+                        "offset": 57,
+                        "length": 5
+                    }
+                },
+                {
+                    "type": "TTS",
+                    "data": {
+                        "speed": "5",
+                        "time": 10
+                    },
+                    "position": {
+                        "offset": 73,
+                        "length": 14
+                    }
+                }
+            ]
+        },
+        {
+            "type": "STEP",
+            "text": "Unire l'olio extravergine di oliva, insaporire: 5 min./120°C/vel. 1.",
+            "annotations": [
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "80 g di olio extravergine di oliva"
+                    },
+                    "position": {
+                        "offset": 8,
+                        "length": 26
+                    }
+                },
+                {
+                    "type": "TTS",
+                    "data": {
+                        "speed": "1",
+                        "time": 300,
+                        "temperature": {
+                            "value": "120",
+                            "unit": "C"
+                        }
+                    },
+                    "position": {
+                        "offset": 48,
+                        "length": 19
+                    }
+                }
+            ]
+        },
+        {
+            "type": "STEP",
+            "text": "Aggiungere il concentrato di pomodoro, il vino rosso, le lenticchie e l'alloro, cuocere: 10 min./100°C//vel.  senza misurino. Eliminare, a piacere, l'alloro.",
+            "annotations": [
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "20 g di concentrato di pomodoro"
+                    },
+                    "position": {
+                        "offset": 14,
+                        "length": 23
+                    }
+                },
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "200 g di vino rosso"
+                    },
+                    "position": {
+                        "offset": 42,
+                        "length": 10
+                    }
+                },
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "200 g di lenticchie secche, ammollate (se indicato sulla confezione)"
+                    },
+                    "position": {
+                        "offset": 57,
+                        "length": 10
+                    }
+                },
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "1 foglia di alloro fresca o secca"
+                    },
+                    "position": {
+                        "offset": 72,
+                        "length": 6
+                    }
+                },
+                {
+                    "type": "TTS",
+                    "data": {
+                        "speed": "soft",
+                        "direction": "CCW",
+                        "time": 600,
+                        "temperature": {
+                            "value": "100",
+                            "unit": "C"
+                        }
+                    },
+                    "position": {
+                        "offset": 89,
+                        "length": 22
+                    }
+                }
+            ]
+        },
+        {
+            "type": "STEP",
+            "text": "Unire la passata di pomodoro, l'acqua, il sale e lo zucchero, cuocere: 50 min./100°C//vel. 2 con il cestello al posto del misurino per evitare schizzi.",
+            "annotations": [
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "700 g di passata di pomodoro"
+                    },
+                    "position": {
+                        "offset": 9,
+                        "length": 19
+                    }
+                },
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "400 g di acqua"
+                    },
+                    "position": {
+                        "offset": 32,
+                        "length": 5
+                    }
+                },
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "2 cucchiaini di sale"
+                    },
+                    "position": {
+                        "offset": 42,
+                        "length": 4
+                    }
+                },
+                {
+                    "type": "INGREDIENT",
+                    "data": {
+                        "description": "1 pizzico di zucchero"
+                    },
+                    "position": {
+                        "offset": 52,
+                        "length": 8
+                    }
+                },
+                {
+                    "type": "TTS",
+                    "data": {
+                        "speed": "2",
+                        "direction": "CCW",
+                        "time": 3000,
+                        "temperature": {
+                            "value": "100",
+                            "unit": "C"
+                        }
+                    },
+                    "position": {
+                        "offset": 71,
+                        "length": 22
+                    }
+                }
+            ]
+        },
+        {
+            "type": "STEP",
+            "text": "Utilizzare per condire della pasta o conservare (vedere consigli)."
+        }
+    ]
+}

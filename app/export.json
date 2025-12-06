@@ -1,0 +1,739 @@
+curl 'https: //cookidoo.co.uk/created-recipes/en-GB/01KBT39MK9MZ915HYKHTBNBVVB' \
+-X 'PATCH' \
+-H 'accept: application/json' \
+-H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+-H 'content-type: application/json' \
+-b 'tmde-lang=en-GB; OptanonAlertBoxClosed=2025-12-06T14: 00: 44.610Z; v-is-authenticated=true; _oauth2_proxy=djIuWDI5aGRYUm9NbDl3Y205NGVTMWlPVFU0WkRBMk5UVmtaRGN6TjJSbFpUSmlPVEpsWTJSak5URXhNakEyTXcuTjR3OUpvQnl5T0hHTUdiY2c3UGJYUQ==|1765035006|qDU40xiPBm1FvUv2vlRLYmXqOvwqeDFAk7GxqmB1cYw=; v-authenticated=qDU40xiPBm1FvUv2vlRLYmXqOvwqeDFAk7GxqmB1cYw=; OptanonConsent=isGpcEnabled=0&datestamp=Sat+Dec+06+2025+15%3A58%3A00+GMT%2B0000+(Greenwich+Mean+Time)&version=202501.1.0&browserGpcFlag=0&isIABGlobal=false&hosts=&landingPath=NotLandingPage&groups=C0002%3A0%2CC0001%3A1%2CC0003%3A0%2CC0004%3A0&geolocation=FR%3BIDF&AwaitingReconsent=false' \
+-H 'origin: https: //cookidoo.co.uk' \
+-H 'priority: u=1, i' \
+-H 'referer: https: //cookidoo.co.uk/created-recipes/en-GB/01KBT39MK9MZ915HYKHTBNBVVB/edit/ingredients-and-preparation-steps?active=steps' \
+-H 'sec-ch-ua: "Google Chrome";v="143",
+"Chromium";v="143",
+"Not A(Brand";v="24"' \
+-H 'sec-ch-ua-mobile: ?0' \
+-H 'sec-ch-ua-platform: "macOS"' \
+-H 'sec-fetch-dest: empty' \
+-H 'sec-fetch-mode: cors' \
+-H 'sec-fetch-site: same-origin' \
+-H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+-H 'x-requested-with: xmlhttprequest' \
+--data-raw $'{
+    "name": "Torta Pasqualina",
+    "hints": "Ensure dough is rolled thinly for best results. Use a sharp knife to cut slits in the dough to prevent puffing during baking.",
+    "tools": [
+        "TM7",
+        "TM6",
+        "TM5"
+    ],
+    "yield": {
+        "value": 0,
+        "unitText": "portion"
+    },
+    "prepTime": 0,
+    "totalTime": 0,
+    "ingredients": [
+        {
+            "text": "600 g all-purpose flour",
+            "type": "INGREDIENT"
+        },
+        {
+            "text": "350 g water",
+            "type": "INGREDIENT"
+        },
+        {
+            "text": "35 g extra virgin olive oil",
+            "type": "INGREDIENT"
+        },
+        {
+            "text": "1 pinch fine salt",
+            "type": "INGREDIENT"
+        },
+        {
+            "text": "1.5 kg Swiss chard (to clean)",
+            "type": "INGREDIENT"
+        },
+        {
+            "text": "1 onion",
+            "type": "INGREDIENT"
+        },
+        {
+            "text": "2 medium eggs",
+            "type": "INGREDIENT"
+        },
+        {
+            "text": "50 g Parmigiano Reggiano DOP (to grate)",
+            "type": "INGREDIENT"
+        },
+        {
+            "text": "3 sprigs marjoram",
+            "type": "INGREDIENT"
+        },
+        {
+            "text": "Extra virgin olive oil to taste",
+            "type": "INGREDIENT"
+        },
+        {
+            "text": "Fine salt to taste",
+            "type": "INGREDIENT"
+        },
+        {
+            "text": "Black pepper to taste",
+            "type": "INGREDIENT"
+        },
+        {
+            "text": "500 g cows milk ricotta",
+            "type": "INGREDIENT"
+        },
+        {
+            "text": "90 g Parmigiano Reggiano DOP (to grate)",
+            "type": "INGREDIENT"
+        },
+        {
+            "text": "3 medium eggs",
+            "type": "INGREDIENT"
+        },
+        {
+            "text": "Nutmeg to taste",
+            "type": "INGREDIENT"
+        },
+        {
+            "text": "Fine salt to taste",
+            "type": "INGREDIENT"
+        },
+        {
+            "text": "All-purpose flour to taste",
+            "type": "INGREDIENT"
+        },
+        {
+            "text": "Extra virgin olive oil to taste",
+            "type": "INGREDIENT"
+        },
+        {
+            "text": "7 medium eggs",
+            "type": "INGREDIENT"
+        },
+        {
+            "text": "30 g Parmigiano Reggiano DOP (to grate)",
+            "type": "INGREDIENT"
+        }
+    ],
+    "instructions": [
+        {
+            "text": "Add flour, a pinch of salt, and water to the mixing bowl.",
+            "type": "STEP",
+            "annotations": [
+                {
+                    "data": {
+                        "description": {
+                            "text": "600 g all-purpose flour",
+                            "annotations": [
+                                {
+                                    "data": {
+                                        "unit": "g",
+                                        "amount": 600,
+                                        "unitText": "g"
+                                    },
+                                    "type": "VOLUME",
+                                    "position": {
+                                        "length": 6,
+                                        "offset": 0
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "type": "INGREDIENT",
+                    "position": {
+                        "length": 5,
+                        "offset": 4
+                    }
+                },
+                {
+                    "data": {
+                        "description": {
+                            "text": "1 pinch fine salt",
+                            "annotations": []
+                        }
+                    },
+                    "type": "INGREDIENT",
+                    "position": {
+                        "length": 5,
+                        "offset": 13
+                    }
+                },
+                {
+                    "data": {
+                        "description": {
+                            "text": "350 g water",
+                            "annotations": [
+                                {
+                                    "data": {
+                                        "unit": "g",
+                                        "amount": 350,
+                                        "unitText": "g"
+                                    },
+                                    "type": "VOLUME",
+                                    "position": {
+                                        "length": 6,
+                                        "offset": 0
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "type": "INGREDIENT",
+                    "position": {
+                        "length": 5,
+                        "offset": 32
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Knead: 2 min./dough mode.",
+            "type": "STEP",
+            "annotations": [
+                {
+                    "data": {
+                        "name": "dough",
+                        "time": 120,
+                        "speed": "dough"
+                    },
+                    "type": "MODE",
+                    "position": {
+                        "length": 17,
+                        "offset": 7
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Add extra virgin olive oil.",
+            "type": "STEP",
+            "annotations": [
+                {
+                    "data": {
+                        "description": {
+                            "text": "35 g extra virgin olive oil",
+                            "annotations": [
+                                {
+                                    "data": {
+                                        "unit": "g",
+                                        "amount": 35,
+                                        "unitText": "g"
+                                    },
+                                    "type": "VOLUME",
+                                    "position": {
+                                        "length": 6,
+                                        "offset": 0
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "type": "INGREDIENT",
+                    "position": {
+                        "length": 22,
+                        "offset": 4
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Knead: 1 min./dough mode.",
+            "type": "STEP",
+            "annotations": [
+                {
+                    "data": {
+                        "name": "dough",
+                        "time": 60,
+                        "speed": "dough"
+                    },
+                    "type": "MODE",
+                    "position": {
+                        "length": 17,
+                        "offset": 7
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Divide dough into 18 pieces, one 100 g for base, others 50 g each.",
+            "type": "STEP",
+            "annotations": []
+        },
+        {
+            "text": "Cover and let rest at room temperature.",
+            "type": "STEP",
+            "annotations": []
+        },
+        {
+            "text": "Add onion to mixing bowl.",
+            "type": "STEP",
+            "annotations": [
+                {
+                    "data": {
+                        "description": {
+                            "text": "1 onion",
+                            "annotations": []
+                        }
+                    },
+                    "type": "INGREDIENT",
+                    "position": {
+                        "length": 5,
+                        "offset": 4
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Chop: 5 sec./vel. 5.",
+            "type": "STEP",
+            "annotations": [
+                {
+                    "data": {
+                        "time": 5,
+                        "speed": "5"
+                    },
+                    "type": "TTS",
+                    "position": {
+                        "length": 13,
+                        "offset": 6
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Add Swiss chard leaves.",
+            "type": "STEP",
+            "annotations": [
+                {
+                    "data": {
+                        "description": {
+                            "text": "1.5 kg Swiss chard (to clean)",
+                            "annotations": [
+                                {
+                                    "data": {
+                                        "unit": "g",
+                                        "amount": 1500,
+                                        "unitText": "g"
+                                    },
+                                    "type": "VOLUME",
+                                    "position": {
+                                        "length": 7,
+                                        "offset": 0
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "type": "INGREDIENT",
+                    "position": {
+                        "length": 11,
+                        "offset": 4
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Sauté: 5 min./120°C//vel. 1.",
+            "type": "STEP",
+            "annotations": [
+                {
+                    "data": {
+                        "time": 300,
+                        "speed": "1",
+                        "direction": "CCW",
+                        "temperature": {
+                            "unit": "C",
+                            "value": "120"
+                        }
+                    },
+                    "type": "TTS",
+                    "position": {
+                        "length": 12,
+                        "offset": 7
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Drain excess liquid from Swiss chard.",
+            "type": "STEP",
+            "annotations": []
+        },
+        {
+            "text": "Add eggs, grated Parmigiano Reggiano, marjoram, salt, and pepper to Swiss chard.",
+            "type": "STEP",
+            "annotations": [
+                {
+                    "data": {
+                        "description": {
+                            "text": "2 medium eggs",
+                            "annotations": []
+                        }
+                    },
+                    "type": "INGREDIENT",
+                    "position": {
+                        "length": 4,
+                        "offset": 4
+                    }
+                },
+                {
+                    "data": {
+                        "description": {
+                            "text": "50 g Parmigiano Reggiano DOP (to grate)",
+                            "annotations": [
+                                {
+                                    "data": {
+                                        "unit": "g",
+                                        "amount": 50,
+                                        "unitText": "g"
+                                    },
+                                    "type": "VOLUME",
+                                    "position": {
+                                        "length": 6,
+                                        "offset": 0
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "type": "INGREDIENT",
+                    "position": {
+                        "length": 19,
+                        "offset": 17
+                    }
+                },
+                {
+                    "data": {
+                        "description": {
+                            "text": "3 sprigs marjoram",
+                            "annotations": []
+                        }
+                    },
+                    "type": "INGREDIENT",
+                    "position": {
+                        "length": 8,
+                        "offset": 38
+                    }
+                },
+                {
+                    "data": {
+                        "description": {
+                            "text": "Fine salt to taste",
+                            "annotations": []
+                        }
+                    },
+                    "type": "INGREDIENT",
+                    "position": {
+                        "length": 4,
+                        "offset": 48
+                    }
+                },
+                {
+                    "data": {
+                        "description": {
+                            "text": "Black pepper to taste",
+                            "annotations": []
+                        }
+                    },
+                    "type": "INGREDIENT",
+                    "position": {
+                        "length": 9,
+                        "offset": 58
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Mix: 30 sec./vel. 3.",
+            "type": "STEP",
+            "annotations": [
+                {
+                    "data": {
+                        "time": 30,
+                        "speed": "3"
+                    },
+                    "type": "TTS",
+                    "position": {
+                        "length": 14,
+                        "offset": 5
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Add ricotta to mixing bowl.",
+            "type": "STEP",
+            "annotations": [
+                {
+                    "data": {
+                        "description": {
+                            "text": "500 g cows milk ricotta",
+                            "annotations": [
+                                {
+                                    "data": {
+                                        "unit": "g",
+                                        "amount": 500,
+                                        "unitText": "g"
+                                    },
+                                    "type": "VOLUME",
+                                    "position": {
+                                        "length": 6,
+                                        "offset": 0
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "type": "INGREDIENT",
+                    "position": {
+                        "length": 7,
+                        "offset": 4
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Mix: 20 sec./vel. 4.",
+            "type": "STEP",
+            "annotations": [
+                {
+                    "data": {
+                        "time": 20,
+                        "speed": "4"
+                    },
+                    "type": "TTS",
+                    "position": {
+                        "length": 14,
+                        "offset": 5
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Add eggs and grated Parmigiano Reggiano.",
+            "type": "STEP",
+            "annotations": [
+                {
+                    "data": {
+                        "description": {
+                            "text": "3 medium eggs",
+                            "annotations": []
+                        }
+                    },
+                    "type": "INGREDIENT",
+                    "position": {
+                        "length": 4,
+                        "offset": 4
+                    }
+                },
+                {
+                    "data": {
+                        "description": {
+                            "text": "90 g Parmigiano Reggiano DOP (to grate)",
+                            "annotations": [
+                                {
+                                    "data": {
+                                        "unit": "g",
+                                        "amount": 90,
+                                        "unitText": "g"
+                                    },
+                                    "type": "VOLUME",
+                                    "position": {
+                                        "length": 6,
+                                        "offset": 0
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "type": "INGREDIENT",
+                    "position": {
+                        "length": 19,
+                        "offset": 20
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Mix: 30 sec./vel. 4.",
+            "type": "STEP",
+            "annotations": [
+                {
+                    "data": {
+                        "time": 30,
+                        "speed": "4"
+                    },
+                    "type": "TTS",
+                    "position": {
+                        "length": 14,
+                        "offset": 5
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Add nutmeg and salt to taste.",
+            "type": "STEP",
+            "annotations": [
+                {
+                    "data": {
+                        "description": {
+                            "text": "Nutmeg to taste",
+                            "annotations": []
+                        }
+                    },
+                    "type": "INGREDIENT",
+                    "position": {
+                        "length": 8,
+                        "offset": 20
+                    }
+                },
+                {
+                    "data": {
+                        "description": {
+                            "text": "Fine salt to taste",
+                            "annotations": []
+                        }
+                    },
+                    "type": "INGREDIENT",
+                    "position": {
+                        "length": 13,
+                        "offset": 15
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Mix: 20 sec./vel. 3.",
+            "type": "STEP",
+            "annotations": [
+                {
+                    "data": {
+                        "time": 20,
+                        "speed": "3"
+                    },
+                    "type": "TTS",
+                    "position": {
+                        "length": 14,
+                        "offset": 5
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Roll out 100 g dough ball to 40 cm diameter.",
+            "type": "STEP",
+            "annotations": []
+        },
+        {
+            "text": "Place dough in 28 cm springform pan, brush with oil.",
+            "type": "STEP",
+            "annotations": []
+        },
+        {
+            "text": "Repeat with smaller dough balls, brushing each layer with oil.",
+            "type": "STEP",
+            "annotations": []
+        },
+        {
+            "text": "Add Swiss chard mixture, then ricotta mixture, to dough base.",
+            "type": "STEP",
+            "annotations": []
+        },
+        {
+            "text": "Make 7 wells in ricotta mixture, add eggs to each.",
+            "type": "STEP",
+            "annotations": [
+                {
+                    "data": {
+                        "description": {
+                            "text": "7 medium eggs",
+                            "annotations": []
+                        }
+                    },
+                    "type": "INGREDIENT",
+                    "position": {
+                        "length": 4,
+                        "offset": 37
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Sprinkle with grated Parmigiano Reggiano.",
+            "type": "STEP",
+            "annotations": [
+                {
+                    "data": {
+                        "description": {
+                            "text": "30 g Parmigiano Reggiano DOP (to grate)",
+                            "annotations": [
+                                {
+                                    "data": {
+                                        "unit": "g",
+                                        "amount": 30,
+                                        "unitText": "g"
+                                    },
+                                    "type": "VOLUME",
+                                    "position": {
+                                        "length": 6,
+                                        "offset": 0
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "type": "INGREDIENT",
+                    "position": {
+                        "length": 19,
+                        "offset": 21
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Cover with remaining dough layers, brush each with oil.",
+            "type": "STEP",
+            "annotations": []
+        },
+        {
+            "text": "Trim excess dough, roll edges to seal.",
+            "type": "STEP",
+            "annotations": []
+        },
+        {
+            "text": "Cut slits in top to release steam.",
+            "type": "STEP",
+            "annotations": []
+        },
+        {
+            "text": "Bake: 80-90 min./180°C.",
+            "type": "STEP",
+            "annotations": [
+                {
+                    "data": {
+                        "time": 5400,
+                        "temperature": {
+                            "unit": "C",
+                            "value": "180"
+                        }
+                    },
+                    "type": "TTS",
+                    "position": {
+                        "length": 13,
+                        "offset": 9
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Cool before serving.",
+            "type": "STEP",
+            "annotations": []
+        }
+    ],
+    "original_url": "https://ricette.giallozafferano.it/Torta-Pasqualina.html"
+}'

@@ -1,0 +1,11 @@
+node_modules
+.next
+*.db
+*.db-journal
+
+# Keep environment variables out of version control
+.env
+.env.local
+
+# Prisma
+/lib/generated/prisma
