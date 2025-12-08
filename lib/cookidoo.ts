@@ -393,11 +393,11 @@ export async function syncRecipeToCookidoo(
             }
           }
           
-          // TTS must have at least time or speed
+          // TTS must have speed - it's required by Cookidoo API
           if (ann.type === "TTS") {
             const data = ann.data as Record<string, unknown> | undefined;
-            if (!data?.time && !data?.speed) {
-              console.log(`[Cookidoo Sync] Removing TTS annotation without time/speed from instruction ${idx}, annotation ${annIdx}`);
+            if (!data?.speed) {
+              console.log(`[Cookidoo Sync] Removing TTS annotation without speed from instruction ${idx}, annotation ${annIdx}`);
               return false;
             }
           }

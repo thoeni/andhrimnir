@@ -228,8 +228,22 @@ For VOLUME annotations inside description:
 6. temperature.value must be NUMERIC ("100", "120", "Varoma")
    - "Varoma" is the ONLY non-numeric value allowed - it means max steaming temp (~120°C)
    - Use it for steaming: { "type": "TTS", "data": { "temperature": { "value": "Varoma", "unit": "C" }, "time": 600, "speed": "1" } }
+   - 🚨 THERMOMIX MAX TEMPERATURE IS 120°C! Any higher is an OVEN temperature.
    
-7. MODE ANNOTATIONS - for special Thermomix functions:
+7. 🚫 OVEN ACTIONS - NO TTS ANNOTATIONS!
+   Thermomix CANNOT bake, roast, grill, or broil. These are OVEN actions.
+   - If original recipe says "bake at 170°C" or "roast at 180°C" → NO TTS annotation!
+   - Just write the step as plain text: "Bake in oven for 35 min at 170°C." with empty annotations: []
+   - Any temperature above 120°C is an OVEN temperature, not Thermomix!
+   
+   ❌ WRONG: "Bake: 35 min./170°C." with TTS { "temperature": { "value": "170" } }
+   ✅ CORRECT: "Bake in oven for 35 min at 170°C." with annotations: []
+
+8. TTS REQUIRES SPEED - every TTS annotation MUST have a "speed" field!
+   ❌ WRONG: { "type": "TTS", "data": { "time": 300, "temperature": { "value": "100" } } }
+   ✅ CORRECT: { "type": "TTS", "data": { "time": 300, "speed": "1", "temperature": { "value": "100" } } }
+
+9. MODE ANNOTATIONS - for special Thermomix functions:
    - Only have "name" (required) and "time" (optional in seconds). NO speed field!
    - 🚨 VALID MODE NAMES ONLY:
      • "dough" - for kneading dough
@@ -241,7 +255,7 @@ For VOLUME annotations inside description:
    ❌ WRONG modes (will cause API errors): "varoma", "pressure", "cook", "slow_cook"
    ✅ CORRECT: { "type": "MODE", "data": { "name": "dough", "time": 120 } }
 
-8. 🚨 DIRECTION IS CRITICAL - determines if blades cut or stir:
+10. 🚨 DIRECTION IS CRITICAL - determines if blades cut or stir:
    
    CLOCKWISE (default) - blades CUT ingredients:
    - Text uses single slash: "5 sec./vel. 5"
@@ -300,21 +314,29 @@ Every INGREDIENT with a weight/volume (g, ml, kg, l, pcs) MUST have nested VOLUM
   }
 }
 
-=== RULE 3: TTS FOR ALL COOKING VERBS (MANDATORY) ===
+=== RULE 3: TTS FOR THERMOMIX ACTIONS ONLY (MANDATORY) ===
 
-If step text contains a cooking verb, it MUST have a TTS annotation with parameters.
+TTS annotations are ONLY for actions the Thermomix can perform!
 
-🚨 Cooking verbs that REQUIRE TTS:
-- cook, simmer, boil → TTS with time + temperature + speed
-- sauté, fry, brown → TTS with time + temperature + speed  
+🚨 Thermomix cooking verbs that REQUIRE TTS:
+- cook, simmer, boil → TTS with time + temperature (max 120°C) + speed
+- sauté, fry, brown → TTS with time + temperature (max 120°C) + speed  
 - chop, blend, puree → TTS with time + speed
 - mix, stir, combine → TTS with time + speed
 - knead → MODE with name "dough"
+- steam → TTS with time + temperature "Varoma" + speed
 
-❌ WRONG: "Cook rice by adding broth gradually." [NO TTS = INVALID]
-✅ CORRECT: "Cook: 18 min./100°C//vel. soft." [HAS TTS]
+🚫 OVEN ACTIONS - NO TTS (Thermomix cannot do these):
+- bake, roast, grill, broil → NO TTS annotation! Just plain text step.
+- Any temperature above 120°C is an OVEN temperature, not Thermomix!
 
-If a step describes cooking but has NO TTS, ADD one with appropriate Thermomix parameters.
+❌ WRONG: "Bake: 35 min./170°C." with TTS annotation [170°C is OVEN, not Thermomix!]
+✅ CORRECT: "Bake in oven for 35 min at 170°C." with NO annotations [oven action]
+
+❌ WRONG: "Cook rice by adding broth gradually." [NO TTS = INVALID for Thermomix action]
+✅ CORRECT: "Cook: 18 min./100°C//vel. soft." [HAS TTS, valid Thermomix temp]
+
+If a step describes OVEN cooking, do NOT add TTS - leave annotations empty.
 
 === RULE 4: CORRECT DIRECTION (CCW FOR COOKING) ===
 
