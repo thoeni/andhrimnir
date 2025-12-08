@@ -202,6 +202,7 @@ export default function Home() {
   const [loadingStatus, setLoadingStatus] = useState("Fetching recipe from URL");
   const [recipe, setRecipe] = useState<CookidooRecipe | null>(null);
   const [error, setError] = useState("");
+  const [errorCode, setErrorCode] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
   const [lastOriginalUrl, setLastOriginalUrl] = useState("");
@@ -255,13 +256,14 @@ export default function Home() {
   const [adminLoading, setAdminLoading] = useState(false);
   const [blockingUserId, setBlockingUserId] = useState<string | null>(null);
 
-const SAMPLE_URL = "https://www.seriouseats.com/mushroom-risotto-recipe-5279129";
+const SAMPLE_URL = "https://www.indianhealthyrecipes.com/dal-makhani-recipe/";
 
 const handleNewImport = () => {
   setNavTab("import");
   setUrl("");
   setRecipe(null);
   setError("");
+  setErrorCode(null);
   setViewState("input");
   setSaveMessage("");
   setSavedRecipeId(null);
@@ -316,6 +318,7 @@ const handleConvert = async () => {
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
         const detail = data?.error || `Failed to convert recipe (status ${response.status})`;
+        setErrorCode(data?.errorCode || null);
         throw new Error(detail);
       }
 
@@ -1711,12 +1714,42 @@ const handleConvert = async () => {
           {viewState === "error" && navTab === "import" && (
             <section className="error-section">
               <div className="error-card">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="error-icon">
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M12 8v4M12 16h.01" />
-                </svg>
-                <h3>Oops! Something went wrong</h3>
-                <p>{error || "Unable to convert recipe. Please try again."}</p>
+                {errorCode === "URL_NOT_FOUND" ? (
+                  <>
+                    <img 
+                      src="/404.jpg.jpg" 
+                      alt="Recipe not found" 
+                      className="error-image"
+                    />
+                    <h3>Recipe Not Found</h3>
+                    <p>{error || "The page at this URL doesn't exist or the recipe has been removed."}</p>
+                    <p className="error-hint">
+                      The URL you provided didn&apos;t lead to any recipe. It may have been moved or deleted from the source website.
+                    </p>
+                  </>
+                ) : errorCode === "URL_MALFORMED" ? (
+                  <>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="error-icon">
+                      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                      <line x1="2" y1="2" x2="22" y2="22" stroke="var(--error)" strokeWidth="2" />
+                    </svg>
+                    <h3>Invalid URL Format</h3>
+                    <p>{error || "The URL doesn't appear to be valid."}</p>
+                    <p className="error-hint">
+                      Please check that the URL is complete and correctly formatted. It should start with <code>https://</code> or <code>http://</code>
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="error-icon">
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M12 8v4M12 16h.01" />
+                    </svg>
+                    <h3>Oops! Something went wrong</h3>
+                    <p>{error || "Unable to convert recipe. Please try again."}</p>
+                  </>
+                )}
                 <button onClick={resetToInput} className="btn-primary">
                   Try Again
                 </button>

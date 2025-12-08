@@ -1081,7 +1081,37 @@ html, body {
 
 .error-card p {
   color: var(--text-muted);
+  margin-bottom: var(--space-md);
+}
+
+.error-card p:last-of-type {
   margin-bottom: var(--space-xl);
+}
+
+.error-image {
+  max-width: 300px;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  margin-bottom: var(--space-lg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.error-hint {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: 8px;
+  border-left: 3px solid var(--accent-primary);
+}
+
+.error-hint code {
+  background: var(--gray-100);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.85em;
 }
 
 .save-bar {

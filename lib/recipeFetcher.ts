@@ -3,8 +3,29 @@ import { RecipeData } from "@/lib/types";
 
 const FETCH_TIMEOUT_MS = 15000;
 
+// Custom error class for recipe fetch errors
+export class RecipeFetchError extends Error {
+  constructor(
+    message: string,
+    public readonly code: "URL_NOT_FOUND" | "URL_MALFORMED" | "FETCH_FAILED" | "TIMEOUT" | "NO_RECIPE"
+  ) {
+    super(message);
+    this.name = "RecipeFetchError";
+  }
+}
+
 // Fetch and parse recipe from URL with timeout
 export async function fetchRecipe(url: string): Promise<RecipeData> {
+  // Validate URL format first
+  try {
+    new URL(url);
+  } catch {
+    throw new RecipeFetchError(
+      "The URL appears to be malformed. Please check the format and try again.",
+      "URL_MALFORMED"
+    );
+  }
+
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
@@ -19,8 +40,18 @@ export async function fetchRecipe(url: string): Promise<RecipeData> {
       },
     });
 
+    if (response.status === 404) {
+      throw new RecipeFetchError(
+        "The page was not found. The recipe may have been moved or deleted.",
+        "URL_NOT_FOUND"
+      );
+    }
+
     if (!response.ok) {
-      throw new Error(`Failed to fetch URL: ${response.status}`);
+      throw new RecipeFetchError(
+        `Could not access the page (status: ${response.status}). Please check the URL.`,
+        "FETCH_FAILED"
+      );
     }
 
     const html = await response.text();
@@ -31,10 +62,26 @@ export async function fetchRecipe(url: string): Promise<RecipeData> {
 
     return extractFromHtml($, url);
   } catch (error) {
-    if (error instanceof DOMException && error.name === "AbortError") {
-      throw new Error("Request to source site timed out");
+    if (error instanceof RecipeFetchError) {
+      throw error;
     }
-    throw error;
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw new RecipeFetchError(
+        "The request timed out. The website may be slow or unavailable.",
+        "TIMEOUT"
+      );
+    }
+    // Handle network errors (e.g., DNS resolution failed, connection refused)
+    if (error instanceof TypeError && (error.message.includes("fetch") || error.message.includes("network"))) {
+      throw new RecipeFetchError(
+        "Could not connect to the website. Please check if the URL is correct.",
+        "URL_MALFORMED"
+      );
+    }
+    throw new RecipeFetchError(
+      error instanceof Error ? error.message : "An unexpected error occurred",
+      "FETCH_FAILED"
+    );
   } finally {
     clearTimeout(timeout);
   }

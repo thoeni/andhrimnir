@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { convertToCookidoo } from "@/lib/openaiCookidoo";
-import { fetchRecipe } from "@/lib/recipeFetcher";
+import { fetchRecipe, RecipeFetchError } from "@/lib/recipeFetcher";
 import { RecipeUrlRequestSchema } from "@/lib/validation";
 import { authOptions } from "@/lib/auth";
 
@@ -62,6 +62,14 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error converting recipe:", error);
+    
+    if (error instanceof RecipeFetchError) {
+      return NextResponse.json({ 
+        error: error.message,
+        errorCode: error.code 
+      }, { status: error.code === "URL_NOT_FOUND" ? 404 : 400 });
+    }
+    
     const message = error instanceof Error ? error.message : "An unexpected error occurred";
     return NextResponse.json({ error: message }, { status: 500 });
   }
